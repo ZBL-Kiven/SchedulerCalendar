@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:ignore="RtlHardcoded,HardcodedText,RtlSymmetry,SmallSp">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_tool"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/black">
+
+        <TextView
+            android:id="@+id/tv_month_day"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:textColor="#fff"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_year"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@id/tv_month_day"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="10sp"
+            tools:ignore="RelativeOverlap" />
+
+        <FrameLayout
+            android:id="@+id/fl_current"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:background="#cca">
+
+            <ImageView
+                android:id="@+id/ib_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:scaleType="centerInside"
+                android:src="#aca" />
+
+            <TextView
+                android:id="@+id/tv_current_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:text="13"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <com.zj.calendar.CalendarLayout
+        android:id="@+id/calendarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000"
+        android:orientation="vertical"
+        app:calendar_content_view_id="@+id/linearLayout">
+
+        <com.zj.calendar.CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#000"
+            app:current_day_text_color="#FFF65F2A"
+            app:current_month_text_color="#ccffffff"
+            app:max_year="2030"
+            app:min_year="2020"
+            app:month_view_show_mode="mode_only_current"
+            app:other_month_text_color="#b7ffffff"
+            app:selected_text_color="#000"
+            app:selected_theme_color="#FFF"
+            app:selected_today_text_color="#FFF"
+            app:selected_today_theme_color="#FFF65F2A"
+            app:week_background="#000"
+            app:week_start_with="sun"
+            app:week_text_color="#99ffffff"
+            app:week_view_scrollable="true"
+            app:year_view_background="@color/black"
+            app:year_view_current_day_text_color="#ff0000"
+            app:year_view_current_month_text_color="#ff0000"
+            app:year_view_day_text_color="#ccffffff"
+            app:year_view_day_text_size="9sp"
+            app:year_view_month_text_color="#fff"
+            app:year_view_month_text_size="20sp"
+            app:year_view_scheme_color="#FF0000"
+            app:year_view_select_text_color="#FFF65F2A" />
+
+        <com.zj.swipeRv.CalendarScrollView
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#cac"
+            android:orientation="vertical">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/black" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/black" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/black" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/black" />
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </com.zj.swipeRv.CalendarScrollView>
+    </com.zj.calendar.CalendarLayout>
+
+
+</LinearLayout>
