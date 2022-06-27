@@ -64,6 +64,14 @@ final class CalendarUtil {
     }
 
 
+    public static String getMonthDetailName(Context context, int month) {
+        String[] s = context.getResources().getStringArray(R.array.month_detail_string_array);
+        if (month > 0 && month <= s.length) {
+            return s[month - 1];
+        }
+        return "";
+    }
+
     /**
      * 是否是闰年
      *

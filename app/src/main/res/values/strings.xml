@@ -1,3 +1,22 @@
 <resources>
-    <string name="app_name">SwipeRecyclerView</string>
+    <string name="app_name">Schedule calendar</string>
+
+    <string name="schedule">Schedule</string>
+    <string name="Join">Join</string>
+    <string name="In_Progress">In Progress</string>
+    <string name="Ended">Ended</string>
+    <string name="Pending">Pending</string>
+    <string name="Canceled">Canceled</string>
+
+    <string name="Start">Start</string>
+    <string name="Invite">Invite</string>
+    <string name="Edit">Edit</string>
+    <string name="Cancel">Cancel</string>
+
+    <string name="ID_">ID: %s</string>
+    <string name="MeetingKey_">Meeting Key: %s</string>
+    <string name="Organizer_">Organizer: %s</string>
+    <string name="host_">Host: %s</string>
+    <string name="Member_">Member (%d)</string>
+    <string name="Meeting_Folder_">Meeting Folder (%d)</string>
 </resources>

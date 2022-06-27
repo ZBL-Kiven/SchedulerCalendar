@@ -1,8 +1,10 @@
 package com.zj.calendar;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.DisplayMetrics;
 
 class DefaultYearView extends YearView {
 
@@ -35,12 +37,33 @@ class DefaultYearView extends YearView {
 
     @Override
     protected boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, int y, boolean hasSchedule) {
-        return false;
+        Paint paint = new Paint(mSelectedPaint);
+        if (calendar.isCurrentDay()) {
+            paint.setColor(mDelegate.getSelectedTodayThemeColor());
+        } else {
+            paint.setColor(mDelegate.getSelectedThemeColor());
+        }
+        float cy = mItemHeight / 2f + y;
+        float cx = x + mItemWidth / 2f;
+        if (calendar.isCurrentDay()) {
+            paint.setColor(mDelegate.getSelectedTodayThemeColor());
+        }
+        paint.setStyle(Paint.Style.FILL);
+        float radius = (mTextBaseLine) / 2f;
+        canvas.drawCircle(cx, cy, radius, paint);
+        return true;
     }
 
     @Override
     protected void onDrawSchedule(Canvas canvas, Calendar calendar, int x, int y) {
-
+        Paint paint = new Paint();
+        float baselineY = mTextBaseLine + y;
+        float cx = x + mItemWidth / 2f;
+        paint.setStrokeWidth(2);
+        paint.setColor(calendar.getScheduleColor());
+        float ty = baselineY + mTextPadding + paint.descent();
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        canvas.drawCircle(cx, ty + metrics.density * 2.5f, metrics.density * 1.5f, paint);
     }
 
     @Override
@@ -49,14 +72,17 @@ class DefaultYearView extends YearView {
         float cx = x + mItemWidth / 2f;
         Paint paint = getPaintWithCalendarState(calendar, isSelected);
         String day = String.valueOf(calendar.getDay());
-        canvas.drawText(day, cx, baselineY, paint);
-        float mTextWidth = paint.measureText(day);
-        if (hasSchedule) {
-            paint.setStrokeWidth(2);
-            paint.setColor(calendar.getScheduleColor());
-            float ty = baselineY + mTextPadding + paint.descent();
-            float tx = cx - mTextWidth / 2f;
-            canvas.drawLine(tx, ty, tx + mTextWidth, ty, paint);
+        if (calendar.isCurrentDay()) {
+            if (isSelected) {
+                paint.setColor(mDelegate.getSelectedTodayTextColor());
+            } else {
+                paint.setColor(mDelegate.getCurDayTextColor());
+            }
+        } else {
+            if (isSelected) {
+                paint.setColor(mDelegate.getSelectedTextColor());
+            }
         }
+        canvas.drawText(day, cx, baselineY, paint);
     }
 }

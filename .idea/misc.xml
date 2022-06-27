@@ -3,8 +3,31 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/layout/activity_view_pager.xml" value="0.39857940673828124" />
+        <entry key="../../../../layout/custom_preview.xml" value="0.30520833333333336" />
+        <entry key="app/src/main/res/drawable/calendar_schedule_bg.xml" value="0.283" />
+        <entry key="app/src/main/res/drawable/calendar_schedule_expand.xml" value="0.283" />
+        <entry key="app/src/main/res/drawable/calendar_schedule_expand_arrow.xml" value="0.22900067138671876" />
+        <entry key="app/src/main/res/drawable/calendar_schedule_item_bg.xml" value="0.383" />
+        <entry key="app/src/main/res/drawable/calendar_schedule_item_status_bg.xml" value="0.383" />
+        <entry key="app/src/main/res/drawable/calendar_schedule_list_item_bg.xml" value="0.383" />
+        <entry key="app/src/main/res/drawable/calendar_schedule_press_bg.xml" value="0.3165" />
+        <entry key="app/src/main/res/drawable/circle_f62f2a.xml" value="0.3165" />
+        <entry key="app/src/main/res/drawable/circle_f65f2a.xml" value="0.3165" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.383" />
+        <entry key="app/src/main/res/drawable/radius_12_1af6.xml" value="0.3165" />
+        <entry key="app/src/main/res/drawable/radius_12_ff4e4e4e.xml" value="0.3165" />
+        <entry key="app/src/main/res/drawable/radius_32_272727.xml" value="0.3165" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2786458333333333" />
+        <entry key="app/src/main/res/layout/activity_view_pager.xml" value="0.5544041450777202" />
+        <entry key="app/src/main/res/layout/calendar_item_schedule.xml" value="0.6065077456384376" />
+        <entry key="app/src/main/res/layout/calendar_schedule_detail_header_layout.xml" value="0.4438268025716146" />
+        <entry key="app/src/main/res/layout/calendar_schedule_detail_layout.xml" value="0.5572374645222328" />
+        <entry key="app/src/main/res/layout/calendar_schedule_detail_nav_layout.xml" value="0.5911458333333334" />
+        <entry key="app/src/main/res/layout/calendar_schedule_item_status_layout.xml" value="0.5911458333333334" />
+        <entry key="app/src/main/res/layout/calendar_schedule_layout.xml" value="0.5371670022214359" />
         <entry key="calendar/src/main/res/drawable-v21/cv_bg_material.xml" value="0.3455" />
+        <entry key="calendar/src/main/res/drawable/cv_bg_material.xml" value="0.3165" />
+        <entry key="calendar/src/main/res/drawable/ic_launcher_background.xml" value="0.3165" />
         <entry key="calendar/src/main/res/layout/cv_layout_calendar_view.xml" value="0.34375" />
         <entry key="calendar/src/main/res/layout/cv_week_bar.xml" value="0.34375" />
       </map>

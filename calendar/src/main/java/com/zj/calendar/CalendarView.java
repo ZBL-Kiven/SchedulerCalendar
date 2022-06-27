@@ -252,6 +252,10 @@ public class CalendarView extends FrameLayout {
         return mDelegate.getCurrentDay().getMonth();
     }
 
+    public String getMonthName() {
+        return mDelegate.getCurrentDay().getMonthName(getContext());
+    }
+
     /**
      * 获取本年
      *
@@ -281,7 +285,6 @@ public class CalendarView extends FrameLayout {
         if (mParentLayout != null && mParentLayout.mContentView != null) {
             if (!mParentLayout.isExpand()) {
                 mParentLayout.expand();
-                //return;
             }
         }
         mWeekPager.setVisibility(GONE);

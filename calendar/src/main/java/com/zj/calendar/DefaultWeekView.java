@@ -2,6 +2,7 @@ package com.zj.calendar;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 
 final class DefaultWeekView extends WeekView {
@@ -35,7 +36,7 @@ final class DefaultWeekView extends WeekView {
         if (calendar.isCurrentDay()) {
             paint.setColor(mDelegate.getSelectedTodayThemeColor());
         }
-        mSelectedPaint.setStyle(Paint.Style.FILL);
+        paint.setStyle(Paint.Style.FILL);
         float cy = (mTextBaseLine + mPadding) / 2f;
         float radius = (mTextBaseLine - mPadding) / 2f;
         canvas.drawCircle(x + getRectCenter(), cy, radius, paint);
@@ -57,6 +58,10 @@ final class DefaultWeekView extends WeekView {
                 paint.setColor(mDelegate.getSelectedTodayTextColor());
             } else {
                 paint.setColor(mDelegate.getCurDayTextColor());
+            }
+        } else {
+            if (mDelegate.mSelectedCalendar != null && calendar.getMonth() != mDelegate.mSelectedCalendar.getMonth()) {
+                paint.setColor(mDelegate.getOtherMonthDayTextColor());
             }
         }
         canvas.drawText(String.valueOf(calendar.getDay()), x + getRectCenter(), getTextTopStart(), paint);

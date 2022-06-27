@@ -65,6 +65,7 @@ internal class CalendarViewDelegate(context: Context, attrs: AttributeSet?) {
 
     //各种字体颜色，看名字知道对应的地方
     var curDayTextColor: Int; private set
+    var otherMonthDayTextColor: Int; private set
     var scheduleTextColor: Int; private set
     var otherMonthTextColor: Int; private set
     var currentMonthTextColor: Int; private set
@@ -272,6 +273,7 @@ internal class CalendarViewDelegate(context: Context, attrs: AttributeSet?) {
         yearViewBackground = array.getColor(R.styleable.CalendarView_year_view_background, Color.WHITE)
         weekTextColor = array.getColor(R.styleable.CalendarView_week_text_color, -0xcccccd)
         curDayTextColor = array.getColor(R.styleable.CalendarView_current_day_text_color, Color.RED)
+        otherMonthDayTextColor = array.getColor(R.styleable.CalendarView_other_month_day_text_color, 0x50FFFFFF)
         selectedThemeColor = array.getColor(R.styleable.CalendarView_selected_theme_color, 0x50CFCFCF)
         selectedTodayTextColor = array.getColor(R.styleable.CalendarView_selected_today_text_color, 0x50CFCFCF)
         selectedTodayThemeColor = array.getColor(R.styleable.CalendarView_selected_today_theme_color, 0x50CFCFCF)

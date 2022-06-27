@@ -57,6 +57,10 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
         return month;
     }
 
+    public String getMonthName(android.content.Context context){
+        return CalendarUtil.getMonthDetailName(context,month);
+    }
+
     public void setMonth(int month) {
         this.month = month;
     }

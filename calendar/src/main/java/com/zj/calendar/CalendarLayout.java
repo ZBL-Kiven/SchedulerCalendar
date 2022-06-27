@@ -286,7 +286,6 @@ public class CalendarLayout extends LinearLayout {
                 final int i = event.getActionIndex();
                 mActivePointerId = event.getPointerId(i);
                 if (mActivePointerId == 0) {
-                    //核心代码：就是让下面的 dy = y- mLastY == 0，避免抖动
                     mLastY = event.getY(mActivePointerId);
                 }
                 break;
@@ -295,13 +294,11 @@ public class CalendarLayout extends LinearLayout {
 
                 getPointerIndex(event, mActivePointerId);
                 if (mActivePointerId == INVALID_POINTER) {
-                    //如果切换了手指，那把mLastY换到最新手指的y坐标即可，核心就是让下面的 dy== 0，避免抖动
                     mLastY = y;
                     mActivePointerId = ACTIVE_POINTER;
                 }
                 float dy = y - mLastY;
-
-                //向上滑动，并且contentView平移到最大距离，显示周视图
+                if (Math.abs(y - downY) < 30) break;
                 if (dy < 0 && mContentView.getTranslationY() == -mContentViewTranslateY) {
                     mLastY = y;
                     event.setAction(MotionEvent.ACTION_DOWN);
@@ -315,7 +312,6 @@ public class CalendarLayout extends LinearLayout {
                     return true;
                 }
                 hideWeek(false);
-
                 //向下滑动，并且contentView已经完全平移到底部
                 if (dy > 0 && mContentView.getTranslationY() + dy >= 0) {
                     mContentView.setTranslationY(0);
@@ -337,14 +333,12 @@ public class CalendarLayout extends LinearLayout {
                 mLastY = y;
                 break;
             case MotionEvent.ACTION_CANCEL:
-
             case MotionEvent.ACTION_POINTER_UP:
                 int pointerIndex = getPointerIndex(event, mActivePointerId);
                 if (mActivePointerId == INVALID_POINTER) break;
                 mLastY = event.getY(pointerIndex);
                 break;
             case MotionEvent.ACTION_UP:
-
                 final VelocityTracker velocityTracker = mVelocityTracker;
                 velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                 float mYVelocity = velocityTracker.getYVelocity();
@@ -604,7 +598,6 @@ public class CalendarLayout extends LinearLayout {
         expand(240);
     }
 
-
     /**
      * 展开
      *
@@ -799,7 +792,6 @@ public class CalendarLayout extends LinearLayout {
         return mContentView.getScrollY() == 0;
     }
 
-
     /**
      * 隐藏内容布局
      */
@@ -832,7 +824,6 @@ public class CalendarLayout extends LinearLayout {
         });
     }
 
-
     @SuppressWarnings("unused")
     private int getCalendarViewHeight() {
         return mMonthView.getVisibility() == VISIBLE ? mDelegate.getWeekBarHeight() + mMonthView.getHeight() : mDelegate.getWeekBarHeight() + mDelegate.getCalendarItemHeight();
@@ -842,11 +833,7 @@ public class CalendarLayout extends LinearLayout {
      * 如果有十分特别的ContentView，可以自定义实现这个接口
      */
     public interface CalendarScrollView {
-        /**
-         * 是否滚动到顶部
-         *
-         * @return 是否滚动到顶部
-         */
+
         boolean isScrollToTop();
     }
 }

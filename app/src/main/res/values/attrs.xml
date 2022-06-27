@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CustomStatusBgView">
+        <attr name="status" format="integer" />
+        <attr name="bg" format="integer" />
+
+
+    </declare-styleable>
+
+    <declare-styleable name="CusUserBgView">
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="strokeColor" format="color|reference" />
+    </declare-styleable>
+
+</resources>

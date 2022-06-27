@@ -33,6 +33,7 @@
 
         <attr name="current_day_text_color" format="color" />
         <attr name="current_month_text_color" format="color" />
+        <attr name="other_month_day_text_color" format="color" />
         <attr name="other_month_text_color" format="color" />
 
 
