@@ -4,7 +4,7 @@ import android.graphics.Color
 
 interface MeetingMemberIn {
 
-    fun getAvatar(): String
+    fun getHeadPic(): String
 
     fun getId(): Long
 

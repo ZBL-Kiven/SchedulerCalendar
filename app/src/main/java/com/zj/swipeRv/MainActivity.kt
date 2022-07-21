@@ -1,155 +1,66 @@
 package com.zj.swipeRv
 
-import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.zj.calendar.Calendar
-import com.zj.calendar.CalendarLayout
-import com.zj.calendar.CalendarView
-import com.zj.swipeRv.cv.ScheduleStatusItemView
-import com.zj.swipeRv.cv.i.ScheduleItemIn
-import com.zj.swipeRv.test.TestScheduleData
-import com.zj.swipeRv.utl.Utl
-import com.zj.views.list.adapters.BaseAdapterDataSet
-import com.zj.views.list.holders.BaseViewHolder
-import com.zj.views.list.views.EmptyRecyclerView
-import java.lang.StringBuilder
-import java.text.SimpleDateFormat
-import java.util.*
+import com.zj.cf.managers.ConstrainFragmentManager
+import com.zj.swipeRv.utl.Config
+import com.zj.swipeRv.utl.InitScheduleInfo
 
 
-class MainActivity : AppCompatActivity(), CalendarView.OnCalendarSelectListener, CalendarView.OnYearChangeListener, CalendarView.OnViewChangeListener {
+class MainActivity : AppCompatActivity() {
 
-    private var mTextMonthDay: TextView? = null
-    private var mTextYear: TextView? = null
-    private var mCalendarView: CalendarView? = null
-    private var mYear = 0
-    private var mCalendarLayout: CalendarLayout? = null
-    private var mIvBack: ImageView? = null
-    private var mIvPre: View? = null
-    private var mIvNext: View? = null
-    private var mRvSchedule: EmptyRecyclerView<ScheduleItemIn>? = null
-
+    private var fm: ConstrainFragmentManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.calendar_schedule_layout)
-        initView()
-        initData()
+        setContentView(R.layout.activity_main)
     }
 
-    @SuppressLint("SetTextI18n")
-    fun initView() {
-        mTextMonthDay = findViewById(R.id.calendar_tv_month)
-        mTextYear = findViewById(R.id.calendar_tv_year)
-        mCalendarLayout = findViewById(R.id.calendar_calendar_layout)
-        mCalendarView = findViewById(R.id.calendar_schedule_calendar_view)
-        mIvBack = findViewById(R.id.calendar_iv_back)
-        mIvPre = findViewById(R.id.calendar_iv_pre)
-        mIvNext = findViewById(R.id.calendar_iv_next)
-        mRvSchedule = findViewById(R.id.calendar_rv_schedule)
+    fun startFrg(view: View) {
+        fm?.clearStack(false)
+        val time = System.currentTimeMillis()
+        fm = CalendarFragment.start(this, findViewById(android.R.id.content), Config(), InitScheduleInfo(time, "1000001"))
+    }
 
-        mIvPre?.setOnClickListener { mCalendarView?.scrollToPre() }
-        mIvNext?.setOnClickListener { mCalendarView?.scrollToNext() }
-        mTextYear?.setOnClickListener {
-            if (mCalendarLayout?.isExpand == false) {
-                mCalendarLayout?.expand()
-            } else {
-                mCalendarView?.showMonthOfYearLayout(mYear)
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (fm?.getTopOfStack() != null) {
+                fm?.finishTopFragment()
+                return false
             }
         }
-        mCalendarView?.setOnCalendarSelectListener(this)
-        mCalendarView?.setOnYearChangeListener(this)
-        mCalendarView?.setOnViewChangeListener(this)
-        mYear = mCalendarView?.curYear ?: 0
-        mTextMonthDay?.text = mCalendarView?.monthName
-        mTextYear?.text = "$mYear"
+        return super.onKeyDown(keyCode, event)
     }
 
-    //test
-    private fun initData() {
-        val year: Int = mCalendarView?.curYear ?: 0
-        val month: Int = mCalendarView?.curMonth ?: 0
-        val schedules = arrayListOf<Calendar>()
-        schedules.add(getScheduleCalendar(year, month, 15, Color.parseColor("#FFFFFF")))
-        schedules.add(getScheduleCalendar(year, month, 21, Color.WHITE))
-        mCalendarView?.setScheduleDate(schedules)
-        initListener()
-        val lst = mutableListOf<TestScheduleData>()
-        repeat(12) {
-            lst.add(TestScheduleData.getCurDayCalendarInfo(it))
+    class Config : com.zj.swipeRv.utl.Config {
+        override fun getApiHost(): String {
+            return "https://api.dev.utown.io:3080"
         }
-        setScheduleData(lst)
-    }
 
-    private fun initListener() {
-        mIvBack?.setOnClickListener {
-            finish()
+        override fun getUserId(): Long {
+            return 1000842
         }
-    }
 
-    private fun getScheduleCalendar(year: Int, month: Int, day: Int, color: Int): Calendar {
-        val calendar = Calendar()
-        calendar.year = year
-        calendar.month = month
-        calendar.day = day
-        calendar.newSchedule(color, "1")
-        return calendar
-    }
+        override fun getToken(): String {
+            return "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTc3NzAwNjcsImV4cCI6MTY2MDM2MjA2Nywiand0X3VzZXIiOnsiZ3VpZCI6IjYxMjc4YjUxOGQxZDQwODBiMWQ3YTY4NjZiYWI5NGQyIiwidXNlcklkIjoxMDAwODQyLCJpZGVudGlmaWVyIjoiamF5dEB0ZW1sLm5ldCIsIm5pY2tuYW1lIjoiSmF5VCIsImF2YXRhciI6Imh0dHBzOi8vY2RuLmRldi51dG93bi5pby9pLzIwMjIwNzExLzUvOC8zLzU4M2ViOTMzNmYwODQ5YzFiMzFjNGNiMWM4OWIxN2ZhLnBuZyIsImZhY2UiOiJodHRwczovL2Nkbi5kZXYudXRvd24uaW8vaS8yMDIyMDcxMS9lL2YvNC9lZjRhM2M5YzA4ZGI0MWU4OWZkNTE0YmZjYTgzODRjZS5wbmciLCJhbm9ueW1vdXMiOmZhbHNlfX0.MJ2afFRWoEGnEEKJQMRUbRTqt5q3ILvK2UX1MaGIlbU"
+        }
 
-    override fun onYearChange(year: Int) {
-        mTextMonthDay?.text = year.toString()
-    }
+        override fun getNickName(): String {
+            return "666"
+        }
 
-    override fun onCalendarOutOfRange(calendar: Calendar?) {}
+        override fun getAvatar(): String {
+            return "assa"
+        }
 
-    @SuppressLint("SetTextI18n")
-    override fun onCalendarSelect(calendar: Calendar, isClick: Boolean) {
-        mTextYear?.visibility = View.VISIBLE
-        mTextMonthDay?.text = calendar.getMonthName(this)
-        mTextYear?.text = "${calendar.year}"
-        mYear = calendar.year
-    }
-
-    override fun onViewChange(isMonthView: Boolean) {
-        mRvSchedule?.isSelected = !isMonthView
-    }
-
-    private fun setScheduleData(data: List<ScheduleItemIn>) {
-        mRvSchedule?.setData(R.layout.calendar_item_schedule, false, data, object : BaseAdapterDataSet<ScheduleItemIn>() {
-            override fun initData(holder: BaseViewHolder<ScheduleItemIn>?, position: Int, module: ScheduleItemIn?) {
-                holder?.getView<TextView>(R.id.calendar_item_tv_start_time)?.let {
-                    val date = module?.getStartCalendar()?.time ?: return@let
-                    it.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
-                }
-                holder?.getView<TextView>(R.id.calendar_item_tv_end_time)?.let {
-                    val startCalendar = module?.getStartCalendar()
-                    val endCalendar = module?.getEndCalendar()
-                    val y1 = startCalendar?.get(java.util.Calendar.YEAR)
-                    val m1 = startCalendar?.get(java.util.Calendar.MONTH)
-                    val day1 = startCalendar?.get(java.util.Calendar.DAY_OF_MONTH)
-                    val y2 = endCalendar?.get(java.util.Calendar.YEAR)
-                    val m2 = endCalendar?.get(java.util.Calendar.MONTH)
-                    val day2 = endCalendar?.get(java.util.Calendar.DAY_OF_MONTH)
-                    val sb = StringBuilder()
-                    if (y1 != y2 || m1 != m2 || day1 != day2) {
-                        sb.append("${Utl.getMonthString(m2)} $day2\n")
-                    }
-                    val date = endCalendar?.time ?: return@let
-                    sb.append(SimpleDateFormat("HH:mm", Locale.getDefault()).format(date))
-                    it.text = sb
-                }
-                holder?.getView<ScheduleStatusItemView<ScheduleItemIn>>(R.id.calendar_item_cl)?.setData(module)
+        override fun getHeader(): Map<String, String> {
+            return mutableMapOf<String, String>().apply {
+                this["userId"] = "${getUserId()}"
+                this["Authorization"] = "Bearer ${getToken()}"
+                this["Content-Type"] = "application/json"
             }
-
-            override fun onItemClick(position: Int, v: View?, m: ScheduleItemIn?) {
-                if (v == null || m == null) return
-                MeetingDetailActivity.start(v.context, m)
-            }
-        })
+        }
     }
 }

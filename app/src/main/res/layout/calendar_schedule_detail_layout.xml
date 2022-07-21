@@ -58,4 +58,46 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:visibility="visible" />
 
+    <com.zj.loading.ZRotateLoadingView
+        android:id="@+id/calendar_schedule_detail_blv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:backgroundFill="@color/black"
+
+        app:btnBackground="@drawable/radius_12_f65f2a"
+        app:btnEnable="true"
+        app:btnMarginTop="24dp"
+        app:btnPaddingBottom="12dp"
+        app:btnPaddingLeft="24dp"
+        app:btnPaddingRight="24dp"
+        app:btnPaddingTop="12dp"
+        app:btnText="@string/No_schedule"
+        app:btnTextColor="#fff"
+        app:btnTextSize="14sp"
+
+        app:drawerHeight="160dp"
+        app:drawerWidth="160dp"
+
+        app:hintColor="#fff"
+        app:hintMarginBottom="4dp"
+        app:hintMarginTop="16dp"
+        app:hintTextSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_iv_back"
+        app:loadingText="@string/Loading"
+        app:loading_height="45dp"
+        app:loading_width="45dp"
+
+        app:noDataText="@string/No_schedule"
+        app:no_data_height="160dp"
+        app:no_data_width="160dp"
+        app:refreshNoDataText="@string/No_schedule_hint_txt"
+        app:refreshTextColor="#99ffffff"
+        app:refreshTextSize="14sp"
+        app:rotate_loadingRes="@drawable/icon_loading"
+        app:rotate_noDataRes="@mipmap/schedule_no_data"
+        app:shownMode="overlap"
+        app:viewGravity="bottom|center" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

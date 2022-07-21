@@ -17,6 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +77,6 @@ public class CalendarView extends FrameLayout {
 
     /**
      * 初始化
-     *
-     * @param context context
      */
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.cv_layout_calendar_view, this, true);
@@ -86,7 +85,9 @@ public class CalendarView extends FrameLayout {
         this.mWeekPager.setup(mDelegate);
 
         try {
-            Constructor<?> constructor = mDelegate.getWeekBarClass().getConstructor(Context.class);
+            Class<?> clz = mDelegate.getWeekBarClass();
+            assert clz != null;
+            Constructor<?> constructor = clz.getConstructor(Context.class);
             mWeekBar = (WeekBar) constructor.newInstance(getContext());
         } catch (Exception e) {
             e.printStackTrace();
@@ -289,6 +290,9 @@ public class CalendarView extends FrameLayout {
         }
         mWeekPager.setVisibility(GONE);
         mDelegate.isShowYearSelectedLayout = true;
+        if (mDelegate.mYearViewChangeListener != null) {
+            mDelegate.mYearViewChangeListener.startChangeYearView(false, 260);
+        }
         if (mParentLayout != null) {
             mParentLayout.hideContentView();
         }
@@ -333,7 +337,9 @@ public class CalendarView extends FrameLayout {
         if (mYearViewPager.getVisibility() == GONE) {
             return;
         }
-        int position = 12 * (mDelegate.mSelectedCalendar.getYear() - mDelegate.getMinYear()) + mDelegate.mSelectedCalendar.getMonth() - mDelegate.getMinYearMonth();
+        Calendar calendar = mDelegate.mSelectedCalendar;
+        if (calendar == null) return;
+        int position = 12 * (calendar.getYear() - mDelegate.getMinYear()) + calendar.getMonth() - mDelegate.getMinYearMonth();
         closeSelectLayout(position);
         mDelegate.isShowYearSelectedLayout = false;
     }
@@ -352,6 +358,9 @@ public class CalendarView extends FrameLayout {
             }
         } else {
             mMonthPager.setCurrentItem(position, false);
+        }
+        if (mDelegate.mYearViewChangeListener != null) {
+            mDelegate.mYearViewChangeListener.startChangeYearView(true, 180);
         }
         mWeekBar.animate().translationY(0).setInterpolator(new LinearInterpolator()).setDuration(280).setListener(new AnimatorListenerAdapter() {
             @Override
@@ -467,50 +476,44 @@ public class CalendarView extends FrameLayout {
      * 滚动到选择的日历
      */
     public void scrollToSelectCalendar() {
-        if (!mDelegate.mSelectedCalendar.isAvailable()) {
+        if (mDelegate.mSelectedCalendar == null || !mDelegate.mSelectedCalendar.isAvailable()) {
             return;
         }
         scrollToCalendar(mDelegate.mSelectedCalendar.getYear(), mDelegate.mSelectedCalendar.getMonth(), mDelegate.mSelectedCalendar.getDay(), false, true);
     }
 
-    /**
-     * 滚动到指定日期
-     *
-     * @param year  year
-     * @param month month
-     * @param day   day
-     */
+    public void scrollToCalendar(Date date) {
+        scrollToCalendar(date, false, true);
+    }
+
+    public void scrollToCalendar(Date date, boolean smooth) {
+        scrollToCalendar(date, smooth, true);
+    }
+
+    public void scrollToCalendar(Date date, boolean smooth, boolean invokeListeners) {
+        int year = CalendarUtil.getDate("yyyy", date);
+        int month = CalendarUtil.getDate("MM", date);
+        int day = CalendarUtil.getDate("dd", date);
+        scrollToCalendar(year, month, day, smooth, invokeListeners);
+    }
+
     public void scrollToCalendar(int year, int month, int day) {
         scrollToCalendar(year, month, day, false, true);
     }
 
-    /**
-     * 滚动到指定日期
-     *
-     * @param year         year
-     * @param month        month
-     * @param day          day
-     * @param smoothScroll smoothScroll
-     */
     public void scrollToCalendar(int year, int month, int day, boolean smoothScroll) {
         scrollToCalendar(year, month, day, smoothScroll, true);
     }
 
-    /**
-     * 滚动到指定日期
-     *
-     * @param year           year
-     * @param month          month
-     * @param day            day
-     * @param smoothScroll   smoothScroll
-     * @param invokeListener 调用日期事件
-     */
     public void scrollToCalendar(int year, int month, int day, boolean smoothScroll, boolean invokeListener) {
 
         Calendar calendar = new Calendar();
         calendar.setYear(year);
         calendar.setMonth(month);
         calendar.setDay(day);
+        if (mDelegate.mSelectedCalendar != null && mDelegate.mSelectedCalendar.equals(calendar)) {
+            return;
+        }
         if (!calendar.isAvailable()) {
             return;
         }
@@ -629,7 +632,8 @@ public class CalendarView extends FrameLayout {
         if (cls == null) {
             return;
         }
-        if (mDelegate.getMonthViewClass().equals(cls)) {
+        Class<?> clz = mDelegate.getMonthViewClass();
+        if (clz == null || clz.equals(cls)) {
             return;
         }
         mDelegate.setMonthViewClass(cls);
@@ -645,7 +649,8 @@ public class CalendarView extends FrameLayout {
         if (cls == null) {
             return;
         }
-        if (mDelegate.getWeekBarClass().equals(cls)) {
+        Class<?> clz = mDelegate.getWeekBarClass();
+        if (clz == null || clz.equals(cls)) {
             return;
         }
         mDelegate.setWeekViewClass(cls);
@@ -661,7 +666,8 @@ public class CalendarView extends FrameLayout {
         if (cls == null) {
             return;
         }
-        if (mDelegate.getWeekBarClass().equals(cls)) {
+        Class<?> clz = mDelegate.getWeekBarClass();
+        if (clz == null || clz.equals(cls)) {
             return;
         }
         mDelegate.setWeekBarClass(cls);
@@ -764,6 +770,7 @@ public class CalendarView extends FrameLayout {
             return;
         }
         mDelegate.updateSelectCalendarSchedule();
+        listener.onCalendarSelect(mDelegate.mSelectedCalendar, false);
     }
 
 
@@ -1032,7 +1039,7 @@ public class CalendarView extends FrameLayout {
             return;
         }
         mDelegate.mScheduleDatesMap.remove(calendar.toString());
-        if (mDelegate.mSelectedCalendar.equals(calendar)) {
+        if (mDelegate.mSelectedCalendar != null && mDelegate.mSelectedCalendar.equals(calendar)) {
             mDelegate.clearSelectedSchedule();
         }
 
@@ -1564,12 +1571,16 @@ public class CalendarView extends FrameLayout {
          * @param isClose 是否关闭
          */
         void onYearViewChange(boolean isClose);
+
+
+        void startChangeYearView(boolean show, long duration);
     }
 
     /**
      * 拦截日期是否可用事件
      */
     public interface OnCalendarInterceptListener {
+
         boolean onCalendarIntercept(Calendar calendar);
 
         void onCalendarInterceptClick(Calendar calendar, boolean isClick);

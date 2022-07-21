@@ -4,8 +4,10 @@
     <declare-styleable name="CustomStatusBgView">
         <attr name="status" format="integer" />
         <attr name="bg" format="integer" />
+    </declare-styleable>
 
-
+    <declare-styleable name="CollapsedRecyclerView">
+        <attr name="collapsed" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="CusUserBgView">

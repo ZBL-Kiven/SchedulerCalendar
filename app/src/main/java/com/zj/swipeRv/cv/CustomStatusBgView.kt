@@ -1,5 +1,6 @@
 package com.zj.swipeRv.cv
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
@@ -19,9 +20,31 @@ open class CustomStatusBgView @JvmOverloads constructor(context: Context, attrib
             }
         }
 
+    private var curHitAnimAlpha = 0f
+    private var inPressed = false
+    private var anim: ValueAnimator? = null
+
+    private var animListener = ValueAnimator.AnimatorUpdateListener { p0 -> curHitAnimAlpha = p0?.animatedFraction ?: 1f;postInvalidate() }
+
     open fun onStatusChanged(status: Status) {}
 
-    private var inPressed = false
+    open fun showHintAnim() {
+        anim?.end()
+        anim?.cancel()
+        anim = ValueAnimator.ofFloat(0.2f, 1.0f).setDuration(400)
+        anim?.repeatCount = 5
+        anim?.addUpdateListener(animListener)
+        anim?.repeatMode = ValueAnimator.REVERSE
+        anim?.start()
+    }
+
+    open fun stopHintAnim() {
+        anim?.end()
+        anim?.cancel()
+        anim = null
+        curHitAnimAlpha = 0f
+        postInvalidate()
+    }
 
     override fun dispatchDraw(canvas: Canvas?) {
         canvas?.save()
@@ -41,14 +64,19 @@ open class CustomStatusBgView @JvmOverloads constructor(context: Context, attrib
     private fun drawBg(canvas: Canvas) {
         val height = this.height * 1.0f
         val bgPaint = Paint()
+        val round = dp2px(12f)
+        val rf = RectF(0f, 0f, width * 1.0f, height)
+
+        /*-- draw bg --*/
+        bgPaint.reset()
         bgPaint.isAntiAlias = true
-        bgPaint.style = Paint.Style.FILL
         bgPaint.textAlign = Paint.Align.CENTER
+        bgPaint.style = Paint.Style.FILL
         bgPaint.color = Color.parseColor("#FF141414")
         bgPaint.alpha = if (inPressed) 170 else 255
-        val round = dp2px(12f)
-        canvas.drawRoundRect(0f, 0f, width * 1.0f, height, round, round, bgPaint)
+        canvas.drawRoundRect(rf, round, round, bgPaint)
 
+        /*-- draw tag --*/
         val tagWidth = dp2px(4f)
         val cos = (round - tagWidth) / round
         val ac = acos(cos)
@@ -61,7 +89,6 @@ open class CustomStatusBgView @JvmOverloads constructor(context: Context, attrib
         path.lineTo(tagWidth, height - round)
         path.arcTo(bottomArc, 180f - thr, thr, false)
         path.close()
-
         val tagPaint = Paint()
         tagPaint.isAntiAlias = true
         tagPaint.style = Paint.Style.FILL
@@ -69,12 +96,26 @@ open class CustomStatusBgView @JvmOverloads constructor(context: Context, attrib
         tagPaint.color = status?.color ?: 0
         tagPaint.alpha = if (inPressed) 170 else 255
         canvas.drawPath(path, tagPaint)
-    }
 
+        /*-- draw hint --*/
+        if (curHitAnimAlpha > 0f) {
+            val strokePath = Path()
+            strokePath.addRect(rf, Path.Direction.CW)
+            bgPaint.isAntiAlias = true
+            bgPaint.style = Paint.Style.STROKE
+            val width = dp2px(2f)
+            bgPaint.strokeWidth = width
+            bgPaint.color = Color.GRAY
+            bgPaint.alpha = (curHitAnimAlpha * 255f).toInt()
+            val gradient = SweepGradient(2f, -2f, intArrayOf(Color.WHITE, Color.TRANSPARENT, Color.WHITE), null)
+            bgPaint.shader = gradient
+            val efc = CornerPathEffect(round)
+            bgPaint.pathEffect = efc
+            canvas.drawPath(strokePath, bgPaint)
+        }
+    }
 
     private fun dp2px(dp: Float): Float {
         return Resources.getSystem().displayMetrics.density * dp
     }
-
-
 }

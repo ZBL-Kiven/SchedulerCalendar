@@ -37,7 +37,7 @@ class CusUserBgView @JvmOverloads constructor(c: Context, attr: AttributeSet? = 
     fun setData(d: MeetingMemberIn) {
         this.data = d
         invalidate()
-        Glide.with(this).load(d.getAvatar()).transform(CircleCrop()).override(width, height).into(this)
+        Glide.with(this).load(d.getHeadPic()).transform(CircleCrop()).override(width, height).into(this)
     }
 
     override fun draw(canvas: Canvas?) {

@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 @SuppressWarnings("unused")
 public class CalendarLayout extends LinearLayout {
 
@@ -133,10 +134,9 @@ public class CalendarLayout extends LinearLayout {
      */
     private final VelocityTracker mVelocityTracker;
     private final int mMaximumVelocity;
-
     private int mItemHeight;
-
     private CalendarViewDelegate mDelegate;
+    private OnTranslateListener translateListener;
 
     public CalendarLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -194,7 +194,6 @@ public class CalendarLayout extends LinearLayout {
         mViewPagerTranslateY = (week - 1) * mItemHeight;
     }
 
-
     /**
      * 更新内容ContentView可平移的最大距离
      */
@@ -209,7 +208,7 @@ public class CalendarLayout extends LinearLayout {
         //已经显示周视图，则需要动态平移contentView的高度
         if (mWeekPager.getVisibility() == VISIBLE) {
             if (mContentView == null) return;
-            mContentView.setTranslationY(-mContentViewTranslateY);
+            onTranslationContent(-mContentViewTranslateY);
         }
     }
 
@@ -229,7 +228,7 @@ public class CalendarLayout extends LinearLayout {
         }
         translationViewPager();
         if (mWeekPager.getVisibility() == VISIBLE) {
-            mContentView.setTranslationY(-mContentViewTranslateY);
+            onTranslationContent(-mContentViewTranslateY);
         }
     }
 
@@ -314,7 +313,7 @@ public class CalendarLayout extends LinearLayout {
                 hideWeek(false);
                 //向下滑动，并且contentView已经完全平移到底部
                 if (dy > 0 && mContentView.getTranslationY() + dy >= 0) {
-                    mContentView.setTranslationY(0);
+                    onTranslationContent(0);
                     translationViewPager();
                     mLastY = y;
                     return super.onTouchEvent(event);
@@ -322,13 +321,13 @@ public class CalendarLayout extends LinearLayout {
 
                 //向上滑动，并且contentView已经平移到最大距离，则contentView平移到最大的距离
                 if (dy < 0 && mContentView.getTranslationY() + dy <= -mContentViewTranslateY) {
-                    mContentView.setTranslationY(-mContentViewTranslateY);
+                    onTranslationContent(-mContentViewTranslateY);
                     translationViewPager();
                     mLastY = y;
                     return super.onTouchEvent(event);
                 }
                 //否则按比例平移
-                mContentView.setTranslationY(mContentView.getTranslationY() + dy);
+                onTranslationContent(mContentView.getTranslationY() + dy);
                 translationViewPager();
                 mLastY = y;
                 break;
@@ -476,8 +475,7 @@ public class CalendarLayout extends LinearLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        if (mDelegate.mIndexCalendar == null || mContentView == null || mCalendarView == null) {
+        if (mDelegate == null || mDelegate.mIndexCalendar == null || mContentView == null || mCalendarView == null) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             return;
         }
@@ -540,7 +538,7 @@ public class CalendarLayout extends LinearLayout {
      */
     private void translationViewPager() {
         float percent = mContentView.getTranslationY() / mContentViewTranslateY;
-        mMonthView.setTranslationY(mViewPagerTranslateY * percent);
+        onTranslation(mViewPagerTranslateY * percent);
     }
 
 
@@ -616,7 +614,7 @@ public class CalendarLayout extends LinearLayout {
         objectAnimator.addUpdateListener(animation -> {
             float currentValue = (Float) animation.getAnimatedValue();
             float percent = currentValue / mContentViewTranslateY;
-            mMonthView.setTranslationY(mViewPagerTranslateY * percent);
+            onTranslation(mViewPagerTranslateY * percent);
             isAnimating = true;
         });
         objectAnimator.addListener(new AnimatorListenerAdapter() {
@@ -659,7 +657,7 @@ public class CalendarLayout extends LinearLayout {
         objectAnimator.addUpdateListener(animation -> {
             float currentValue = (Float) animation.getAnimatedValue();
             float percent = currentValue / mContentViewTranslateY;
-            mMonthView.setTranslationY(mViewPagerTranslateY * percent);
+            onTranslation(mViewPagerTranslateY * percent);
             isAnimating = true;
         });
         objectAnimator.addListener(new AnimatorListenerAdapter() {
@@ -694,7 +692,7 @@ public class CalendarLayout extends LinearLayout {
                     objectAnimator.addUpdateListener(animation -> {
                         float currentValue = (Float) animation.getAnimatedValue();
                         float percent = currentValue / mContentViewTranslateY;
-                        mMonthView.setTranslationY(mViewPagerTranslateY * percent);
+                        onTranslation(mViewPagerTranslateY * percent);
                         isAnimating = true;
                     });
                     objectAnimator.addListener(new AnimatorListenerAdapter() {
@@ -720,6 +718,15 @@ public class CalendarLayout extends LinearLayout {
             }
             post(() -> mDelegate.mViewChangeListener.onViewChange(true));
         }
+    }
+
+    private void onTranslation(float by) {
+        if (translateListener != null) translateListener.onTranslate(by / mViewPagerTranslateY, mContentViewTranslateY);
+        mMonthView.setTranslationY(by);
+    }
+
+    private void onTranslationContent(float by) {
+        mContentView.setTranslationY(by);
     }
 
     /**
@@ -814,7 +821,7 @@ public class CalendarLayout extends LinearLayout {
     @SuppressLint("NewApi")
     final void showContentView() {
         if (mContentView == null) return;
-        mContentView.setTranslationY(getHeight() - mMonthView.getHeight());
+        onTranslationContent(getHeight() - mMonthView.getHeight());
         mContentView.setVisibility(VISIBLE);
         mContentView.animate().translationY(0).setDuration(180).setInterpolator(new LinearInterpolator()).setListener(new AnimatorListenerAdapter() {
             @Override
@@ -829,11 +836,26 @@ public class CalendarLayout extends LinearLayout {
         return mMonthView.getVisibility() == VISIBLE ? mDelegate.getWeekBarHeight() + mMonthView.getHeight() : mDelegate.getWeekBarHeight() + mDelegate.getCalendarItemHeight();
     }
 
+    public void setTranslationListener(OnTranslateListener listener) {
+        this.translateListener = listener;
+        if (translateListener != null) {
+            post(() -> translateListener.onContentReady(mContentViewTranslateY));
+        }
+    }
+
     /**
      * 如果有十分特别的ContentView，可以自定义实现这个接口
      */
     public interface CalendarScrollView {
 
         boolean isScrollToTop();
+    }
+
+    public interface OnTranslateListener {
+
+        void onTranslate(float percent, float total);
+
+        void onContentReady(float contentHeight);
+
     }
 }

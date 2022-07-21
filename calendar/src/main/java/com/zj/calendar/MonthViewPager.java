@@ -99,14 +99,11 @@ public final class MonthViewPager extends ViewPager {
                 if (mDelegate.mMonthChangeListener != null) {
                     mDelegate.mMonthChangeListener.onMonthChange(calendar.getYear(), calendar.getMonth());
                 }
-
                 //周视图显示的时候就需要动态改变月视图高度
                 if (mWeekPager.getVisibility() == VISIBLE) {
                     updateMonthViewHeight(calendar.getYear(), calendar.getMonth());
                     return;
                 }
-
-
                 if (mDelegate.getSelectMode() == CalendarViewDelegate.SELECT_MODE_DEFAULT) {
                     if (!calendar.isCurrentMonth()) {
                         mDelegate.mSelectedCalendar = calendar;
@@ -282,14 +279,12 @@ public final class MonthViewPager extends ViewPager {
             int week = CalendarUtil.getWeekFromDayInMonth(calendar, mDelegate.getWeekStart());
             mParentLayout.updateSelectWeek(week);
         }
-
         if (mDelegate.mCalendarSelectListener != null && invokeListener) {
             mDelegate.mCalendarSelectListener.onCalendarSelect(calendar, false);
         }
         if (mDelegate.mInnerListener != null) {
             mDelegate.mInnerListener.onMonthDateSelected(calendar, false);
         }
-
         updateSelected();
     }
 

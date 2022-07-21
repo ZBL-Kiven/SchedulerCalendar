@@ -1,7 +1,7 @@
 package com.zj.swipeRv.cv
 
 import android.content.Context
-import android.graphics.Color
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
@@ -23,6 +23,7 @@ class ScheduleStatusItemView<T : ScheduleItemIn> @JvmOverloads constructor(conte
     private lateinit var scheduleName: TextView
     private lateinit var scheduleStatus: TextView
     private lateinit var scheduleFiles: View
+    private lateinit var scheduleNewTag: View
     private lateinit var scheduleJoin: DrawableTextView
     private var data: T? = null
     private var selfIsOwner = false
@@ -31,6 +32,7 @@ class ScheduleStatusItemView<T : ScheduleItemIn> @JvmOverloads constructor(conte
         scheduleName = findViewById(R.id.calendar_item_tv_name)
         scheduleStatus = findViewById(R.id.calendar_item_tv_status)
         scheduleFiles = findViewById(R.id.calendar_item_v_files)
+        scheduleNewTag = findViewById(R.id.calendar_item_v_tag)
         scheduleJoin = findViewById(R.id.calendar_item_dtv_join)
     }
 
@@ -40,6 +42,14 @@ class ScheduleStatusItemView<T : ScheduleItemIn> @JvmOverloads constructor(conte
         this.scheduleFiles.isVisible = d?.hasFiles() ?: false
         this.selfIsOwner = d?.selfIsOwner() ?: false
         super.status = d?.getStatus() ?: Status.Ended
+    }
+
+    override fun showHintAnim() {
+        scheduleNewTag.isVisible = true
+    }
+
+    override fun stopHintAnim() {
+        scheduleNewTag.isVisible = false
     }
 
     override fun onStatusChanged(status: Status) {
@@ -71,6 +81,12 @@ class ScheduleStatusItemView<T : ScheduleItemIn> @JvmOverloads constructor(conte
                 scheduleName.setTextColor(ContextCompat.getColor(context, R.color.c_9fff))
                 scheduleStatus.setTextColor(ContextCompat.getColor(context, R.color.c_6fff))
             }
+        }
+        if (data?.hasBeenRemoved() == true) {
+            scheduleJoin.isVisible = true
+            scheduleJoin.isSelected = true
+        } else {
+            scheduleJoin.isSelected = false
         }
         scheduleStatus.text = context.getString(status.strId)
     }

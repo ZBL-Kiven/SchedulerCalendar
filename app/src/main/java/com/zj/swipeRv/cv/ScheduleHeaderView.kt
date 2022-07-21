@@ -10,16 +10,12 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.zj.dtv.DrawableTextView
 import com.zj.swipeRv.R
 import com.zj.swipeRv.cv.i.MeetingItemIn
 import com.zj.swipeRv.cv.i.MeetingMemberIn
 import com.zj.swipeRv.cv.i.Status
 import com.zj.swipeRv.utl.Utl
-import com.zj.dtv.DrawableTextView
-import java.lang.StringBuilder
-import java.text.SimpleDateFormat
-import java.util.*
-
 
 class ScheduleHeaderView @JvmOverloads constructor(c: Context, attr: AttributeSet? = null, def: Int = 0) : ConstraintLayout(c, attr, def) {
 
@@ -27,11 +23,13 @@ class ScheduleHeaderView @JvmOverloads constructor(c: Context, attr: AttributeSe
     private lateinit var tvMember: TextView
     private lateinit var tvFolder: TextView
     private lateinit var tvStatus: TextView
+    private lateinit var tvRemoved: TextView
     private lateinit var dtvTime: DrawableTextView
     private lateinit var dtvId: DrawableTextView
     private lateinit var dtvMeetingKey: DrawableTextView
     private lateinit var dtvOrganizer: DrawableTextView
     private lateinit var dtvHost: DrawableTextView
+    private lateinit var dtvDuration: DrawableTextView
     private lateinit var clUsers: CollapsedLayout
     private lateinit var llMembers: LinearLayout
     private val maxHeadPicSize = 6
@@ -51,57 +49,89 @@ class ScheduleHeaderView @JvmOverloads constructor(c: Context, attr: AttributeSe
         dtvMeetingKey = findViewById(R.id.calendar_schedule_detail_dtv_key)
         dtvOrganizer = findViewById(R.id.calendar_schedule_detail_dtv_owner)
         dtvHost = findViewById(R.id.calendar_schedule_detail_dtv_host)
+        dtvDuration = findViewById(R.id.calendar_schedule_detail_dtv_duration)
         llMembers = findViewById(R.id.calendar_schedule_detail_ll_member)
         clUsers = findViewById(R.id.calendar_schedule_detail_cl_ivs)
+        tvRemoved = findViewById(R.id.calendar_schedule_detail_tv_removed)
     }
 
     fun setData(item: MeetingItemIn) {
         tvName.text = item.getMeetingName()
-        tvFolder.isVisible = item.hasFiles()
-        val startCalendar = item.getStartCalendar()
-        val endCalendar = item.getEndCalendar()
-        val y1 = startCalendar.get(Calendar.YEAR)
-        val m1 = startCalendar.get(Calendar.MONTH)
-        val w1 = startCalendar.get(Calendar.DAY_OF_WEEK)
-        val day1 = startCalendar.get(Calendar.DAY_OF_MONTH)
-        val y2 = endCalendar.get(Calendar.YEAR)
-        val m2 = endCalendar.get(Calendar.MONTH)
-        val day2 = endCalendar.get(Calendar.DAY_OF_MONTH)
-        val w2 = endCalendar.get(Calendar.DAY_OF_WEEK)
-        val date1 = startCalendar.time ?: 0
-        val date2 = endCalendar.time ?: 0
-        val s1 = SimpleDateFormat("dd, HH:mm", Locale.getDefault()).format(date1)
-        val sb = StringBuilder("${Utl.getWeekString(w1)}, ${Utl.getMonthString(m1)} $s1 - ")
-        if (y1 != y2 || m1 != m2 || day1 != day2) {
-            sb.append("${Utl.getWeekString(w2)}, ${Utl.getMonthString(m2)} ${Utl.getDigitsDay(day2)}, ")
-        }
-        sb.append(SimpleDateFormat("HH:mm", Locale.getDefault()).format(date2))
+        val sb = StringBuilder()
+        sb.append(Utl.getDisplayTimeStr(item.getMeetingStartTime(), item.getMeetingStartTime(), 2))
+        sb.append(" ~ ")
+        sb.append(Utl.getDisplayTimeStr(item.getMeetingStartTime(), item.getMeetingEndTime()))
         dtvTime.text = sb.toString()
-        dtvMeetingKey.text = context.getString(R.string.MeetingKey_, item.getMeetingKey())
-        dtvId.text = context.getString(R.string.ID_, item.getMeetingId())
-        dtvOrganizer.text = context.getString(R.string.Organizer_, item.getOwnerName())
         val d = tvStatus.background
         tvStatus.background = Utl.tintDrawable(d, item.getStatus().color)
         val color = if (item.getStatus() == Status.Canceled || item.getStatus() == Status.Ended) ContextCompat.getColor(context, R.color.c_6fff) else Color.WHITE
         tvStatus.setTextColor(color)
         tvStatus.text = context.getString(item.getStatus().strId)
+        dtvMeetingKey.isVisible = !item.hasBeenRemoved()
+        dtvHost.isVisible = item.getHostName().isNotEmpty() && !item.hasBeenRemoved()
+        dtvId.isVisible = !item.hasBeenRemoved()
+        dtvOrganizer.isVisible = !item.hasBeenRemoved()
+        tvFolder.isVisible = item.hasFiles() && !item.hasBeenRemoved()
+        tvRemoved.isVisible = item.hasBeenRemoved()
+        if (item.getStatus() == Status.Ended) {
+            val sb1 = StringBuilder()
+            val diff = item.getDuration() / 1000
+            val h = (diff / 60f / 60f).toInt()
+            if (h > 0) {
+                sb1.append("$h" + "h")
+            }
+            val m = (diff / 60f).toInt() % 60
+            if (m > 0) {
+                sb1.append("$m" + "m")
+            }
+            val s = diff % 60
+            if (s > 0) {
+                sb1.append("$s" + "s")
+            }
+            dtvDuration.isVisible = sb1.isNotEmpty()
+            dtvDuration.text = sb1.toString()
+        }
+        if (item.hasBeenRemoved()) return
+        dtvMeetingKey.setOnBadgeClickListener {
+            it.isSelected = !it.isSelected
+            updateMeetingKeyState(item)
+        }
+        updateMeetingKeyState(item)
         dtvHost.text = context.getString(R.string.host_, item.getHostName())
-        dtvHost.isVisible = item.getHostName().isNotEmpty()
+        dtvId.text = context.getString(R.string.ID_, item.getMeetingId())
+        dtvOrganizer.text = context.getString(R.string.Organizer_, item.getMeetingOwnerName())
         tvFolder.text = context.getString(R.string.Meeting_Folder_, 0)
     }
 
     fun setFoldersCount(count: Int) {
+        tvFolder.isVisible = count > 0
         tvFolder.text = context.getString(R.string.Meeting_Folder_, count)
     }
 
-    fun <T : MeetingMemberIn> setMembers(m: List<T>) {
+    fun <T : MeetingMemberIn> setMembers(m: List<T>?) {
         if (clUsers.height <= 0) clUsers.post { obtainMembers(m) } else obtainMembers(m)
     }
 
-    private fun <T : MeetingMemberIn> obtainMembers(m: List<T>) {
+    private fun updateMeetingKeyState(item: MeetingItemIn) {
+        if (dtvMeetingKey.isSelected) {
+            val key = item.getMeetingKey().let {
+                val sb = StringBuilder()
+                repeat(it.length) {
+                    sb.append("*")
+                }
+                sb.toString()
+            }
+            dtvMeetingKey.textSelected = context.getString(R.string.MeetingKey_, key)
+        } else {
+            val key = item.getMeetingKey()
+            dtvMeetingKey.text = context.getString(R.string.MeetingKey_, key)
+        }
+    }
+
+    private fun <T : MeetingMemberIn> obtainMembers(m: List<T>?) {
         clUsers.removeAllViews()
         llMembers.isVisible = true
-        if (m.isEmpty()) {
+        if (m.isNullOrEmpty()) {
             llMembers.isVisible = false
             return
         }

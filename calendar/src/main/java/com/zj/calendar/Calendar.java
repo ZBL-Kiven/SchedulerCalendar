@@ -57,8 +57,8 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
         return month;
     }
 
-    public String getMonthName(android.content.Context context){
-        return CalendarUtil.getMonthDetailName(context,month);
+    public String getMonthName(android.content.Context context) {
+        return CalendarUtil.getMonthDetailName(context, month);
     }
 
     public void setMonth(int month) {
@@ -125,20 +125,10 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
         return toString().compareTo(calendar.toString());
     }
 
-    /**
-     * 日期是否可用
-     *
-     * @return 日期是否可用
-     */
     public boolean isAvailable() {
         return year > 0 & month > 0 & day > 0 & day <= 31 & month <= 12 & year >= 1900 & year <= 2099;
     }
 
-    /**
-     * 获取当前日历对应时间戳
-     *
-     * @return getTimeInMillis
-     */
     public long getTimeInMillis() {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         calendar.set(java.util.Calendar.YEAR, year);
@@ -147,12 +137,61 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
         return calendar.getTimeInMillis();
     }
 
+    public void setTimeInMillis(long ts) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.setTimeInMillis(ts);
+        int year = calendar.get(java.util.Calendar.YEAR);
+        int month = calendar.get(java.util.Calendar.MONTH) + 1;
+        int day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
+        setYear(year);
+        setMonth(month);
+        setDay(day);
+    }
+
     @Override
     public boolean equals(@Nullable Object o) {
         if (o instanceof Calendar) {
             if (((Calendar) o).getYear() == year && ((Calendar) o).getMonth() == month && ((Calendar) o).getDay() == day) return true;
         }
         return super.equals(o);
+    }
+
+    /**
+     * 这里 Month 并没有 -1 ，意味着此处返回的实际时间戳的 calendar 比系统默认的 Month 多 1，目前用于接口请求。
+     */
+    public long[] getMonthDayRange() {
+        java.util.Calendar cs = java.util.Calendar.getInstance();
+        java.util.Calendar ce = java.util.Calendar.getInstance();
+        if (month + 1 > 12) {
+            ce.set(year + 1, 0, 0, 23, 59, 59);
+        } else {
+            ce.set(year, month, 0, 23, 59, 59);
+        }
+        cs.set(year, month - 1, 1, 0, 0, 0);
+
+        long monthStartTime = setEndMillisData(cs.getTimeInMillis());
+        long monthEndTime = setEndMillisData(ce.getTimeInMillis()) - 1;
+        return new long[]{monthStartTime, monthEndTime};
+    }
+
+    /**
+     * 这里 Month 做了处理，用于时间过滤的，与系统 Month Index 一致。
+     */
+    public long[] getDayRange() {
+        java.util.Calendar cs = java.util.Calendar.getInstance();
+        java.util.Calendar ce = java.util.Calendar.getInstance();
+        cs.set(year, month - 1, day, 0, 0, 0);
+        ce.set(year, month - 1, day + 1, 0, 0, 0);
+        long hourStartTime = setEndMillisData(cs.getTimeInMillis());
+        long hourEndTime = setEndMillisData(ce.getTimeInMillis()) - 1;
+        return new long[]{hourStartTime, hourEndTime};
+    }
+
+    /**
+     * 忽略毫秒值，便于更精确的过滤，误差缩小至 1ms
+     */
+    private long setEndMillisData(long ts) {
+        return (((long) (ts / 1000f)) * 1000L);
     }
 
     @NonNull
@@ -179,7 +218,7 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
     }
 
     public void newSchedule(int schemeColor, String name) {
-        this.schedule = new Schedule(schemeColor, name,null);
+        this.schedule = new Schedule(schemeColor, name, null);
     }
 
     final void clearSchedule() {

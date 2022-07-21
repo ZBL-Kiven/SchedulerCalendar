@@ -5,28 +5,18 @@ import java.util.*
 
 
 interface MeetingItemIn : Serializable {
-    fun getStartTime(): Long
-    fun getEndTime(): Long
+    fun getMeetingStartTime(): Long
+    fun getMeetingEndTime(): Long
+    fun getDuration(): Long
     fun getStatus(): Status
     fun getMeetingName(): String
     fun selfIsOwner(): Boolean
+    fun hasBeenRemoved(): Boolean
     fun hasFiles(): Boolean
     fun getMeetingId(): String
     fun getMeetingKey(): String
-    fun getOwnerName(): String
+    fun getMeetingOwnerName(): String
     fun getHostName(): String
-    fun getOwnerId(): Long
+    fun getMeetingOwnerId(): Long
     fun getHostId(): Long
-
-    fun getStartCalendar(): Calendar {
-        val startCalendar = Calendar.getInstance()
-        startCalendar.timeInMillis = getStartTime()
-        return startCalendar
-    }
-
-    fun getEndCalendar(): Calendar {
-        val endCalendar = Calendar.getInstance()
-        endCalendar.timeInMillis = getEndTime()
-        return endCalendar
-    }
 }

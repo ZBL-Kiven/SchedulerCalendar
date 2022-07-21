@@ -1,12 +1,17 @@
 <resources>
     <string name="app_name">Schedule calendar</string>
 
+    <string name="Loading">Loading…</string>
+    <string name="No_schedule">No schedule</string>
+    <string name="No_schedule_hint_txt">Another day with nothing to do</string>
+
     <string name="schedule">Schedule</string>
     <string name="Join">Join</string>
     <string name="In_Progress">In Progress</string>
     <string name="Ended">Ended</string>
     <string name="Pending">Pending</string>
     <string name="Canceled">Canceled</string>
+    <string name="Removed">Removed</string>
 
     <string name="Start">Start</string>
     <string name="Invite">Invite</string>
@@ -19,4 +24,5 @@
     <string name="host_">Host: %s</string>
     <string name="Member_">Member (%d)</string>
     <string name="Meeting_Folder_">Meeting Folder (%d)</string>
+    <string name="Meeting_removed_hint">You have been removed from the meeting.</string>
 </resources>

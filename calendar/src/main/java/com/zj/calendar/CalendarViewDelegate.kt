@@ -8,7 +8,7 @@ import com.zj.calendar.CalendarView.*
 import java.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
-internal class CalendarViewDelegate(context: Context, attrs: AttributeSet?) {
+internal class CalendarViewDelegate constructor(context: Context, attrs: AttributeSet?) {
 
     companion object {
 

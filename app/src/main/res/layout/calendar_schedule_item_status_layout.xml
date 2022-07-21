@@ -2,13 +2,15 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:background="#cac"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <TextView
         android:id="@+id/calendar_item_tv_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         android:textColor="#fff"
         android:textSize="16sp"
@@ -16,6 +18,7 @@
         app:layout_constraintEnd_toStartOf="@id/calendar_item_v_files"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginEnd="24dp"
         tools:text="Sample Meeting" />
 
     <TextView
@@ -23,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:background="@drawable/radius_12_ff4e4e4e"
         android:ellipsize="end"
         android:maxLines="2"
@@ -32,17 +36,28 @@
         android:paddingBottom="2dp"
         android:textColor="@color/c_6fff"
         android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/calendar_item_tv_name"
         app:layout_constraintTop_toBottomOf="@id/calendar_item_tv_name"
         tools:text="Ended" />
+
+    <View
+        android:id="@+id/calendar_item_v_tag"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:background="@mipmap/calendar_scheduleitem_new_tag"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <View
         android:id="@+id/calendar_item_v_files"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_marginTop="7dp"
+        android:layout_marginEnd="16dp"
         android:background="@mipmap/calendar_icon_schedule_item_file"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/calendar_item_tv_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/calendar_item_tv_name" />
 
@@ -50,6 +65,7 @@
         android:id="@+id/calendar_item_dtv_join"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
         android:visibility="gone"
         app:dtv_background="@drawable/radius_12_1af6"
         app:dtv_drawableHeight="12dp"
@@ -60,12 +76,15 @@
         app:dtv_paddingRight="10dp"
         app:dtv_paddingTop="4dp"
         app:dtv_replaceDrawable="@mipmap/calendar_icon_schedule_item_join"
-        app:dtv_selectionAble="false"
+        app:dtv_select="true"
         app:dtv_text="@string/Join"
         app:dtv_textColor="#fff"
+        app:dtv_textColorSelect="@color/c_6fff"
+        app:dtv_textSelected="@string/Removed"
         app:dtv_textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/calendar_item_tv_status"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/calendar_item_tv_status" />
+        app:layout_constraintTop_toTopOf="@id/calendar_item_tv_status"
+        tools:visibility="visible" />
 
 </merge>
