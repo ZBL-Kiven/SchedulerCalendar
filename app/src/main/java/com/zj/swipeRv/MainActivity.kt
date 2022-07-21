@@ -5,8 +5,6 @@ import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.zj.cf.managers.ConstrainFragmentManager
-import com.zj.swipeRv.utl.Config
-import com.zj.swipeRv.utl.InitScheduleInfo
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     fun startFrg(view: View) {
         fm?.clearStack(false)
         val time = System.currentTimeMillis()
-        fm = CalendarFragment.start(this, findViewById(android.R.id.content), Config(), InitScheduleInfo(time, "1000001"))
+        fm = com.zj.schedule.CalendarFragment.start(this, findViewById(android.R.id.content), Config(), com.zj.schedule.utl.InitScheduleInfo(time, "1000001"))
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -34,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-    class Config : com.zj.swipeRv.utl.Config {
+    class Config : com.zj.schedule.utl.Config {
         override fun getApiHost(): String {
             return "https://api.dev.utown.io:3080"
         }
