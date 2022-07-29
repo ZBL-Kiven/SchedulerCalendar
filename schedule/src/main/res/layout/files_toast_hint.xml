@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="286dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/radius_12_3b3b3b"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingTop="24dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="24dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@mipmap/schedule_file_hint" />
+
+    <TextView
+        android:id="@+id/files_toast_hint_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/Success_for_U_or_D"
+        android:textColor="#fff"
+        android:textSize="16sp" />
+
+</LinearLayout>

@@ -33,14 +33,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <com.zj.views.list.views.EmptyRecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/calendar_schedule_detail_rv_files"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="16dp"
                 android:overScrollMode="never"
                 android:paddingBottom="64dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/calendar_schedule_detail_item_files" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -62,8 +63,9 @@
         android:id="@+id/calendar_schedule_detail_blv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:paddingTop="120dp"
         app:backgroundFill="@color/black"
-
+        app:backgroundUnderTheContent="@drawable/radius_16_3b3b3b"
         app:btnBackground="@drawable/radius_12_f65f2a"
         app:btnEnable="true"
         app:btnMarginTop="24dp"
@@ -74,21 +76,16 @@
         app:btnText="@string/No_schedule"
         app:btnTextColor="#fff"
         app:btnTextSize="14sp"
-
         app:drawerHeight="160dp"
         app:drawerWidth="160dp"
-
         app:hintColor="#fff"
         app:hintMarginBottom="4dp"
         app:hintMarginTop="16dp"
         app:hintTextSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-
         app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_iv_back"
-        app:loadingText="@string/Loading"
         app:loading_height="45dp"
         app:loading_width="45dp"
-
         app:noDataText="@string/No_schedule"
         app:no_data_height="160dp"
         app:no_data_width="160dp"
@@ -97,7 +94,7 @@
         app:refreshTextSize="14sp"
         app:rotate_loadingRes="@drawable/icon_loading"
         app:rotate_noDataRes="@mipmap/schedule_no_data"
-        app:shownMode="overlap"
-        app:viewGravity="bottom|center" />
+        app:shownMode="floating"
+        app:viewGravity="center" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

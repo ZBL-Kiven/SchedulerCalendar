@@ -26,10 +26,12 @@ internal val ScheduleApi by lazy {
 
 internal object Body {
 
+    data class DeleteFiles(val meetingId: Long, val fileId: Long)
 }
 
 internal object Resp {
 
     data class SuccessBoolean(var success: Boolean)
+
 
 }

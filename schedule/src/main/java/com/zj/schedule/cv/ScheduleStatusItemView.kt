@@ -12,6 +12,7 @@ import com.zj.schedule.cv.i.Status
 import com.zj.schedule.utl.Utl.tintDrawable
 import com.zj.dtv.DrawableTextView
 import com.zj.schedule.R
+import com.zj.schedule.utl.Utl
 
 class ScheduleStatusItemView<T : ScheduleItemIn> @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, def: Int = 0) : CustomStatusBgView(context, attributeSet, def) {
 
@@ -42,6 +43,9 @@ class ScheduleStatusItemView<T : ScheduleItemIn> @JvmOverloads constructor(conte
         this.scheduleFiles.isVisible = d?.hasFiles() ?: false
         this.selfIsOwner = d?.selfIsOwner() ?: false
         super.status = d?.getStatus() ?: Status.Ended
+        scheduleJoin.setOnClickListener {
+            Utl.config?.meetingFuncIn?.joinMeeting(data?.getMeetingId()?.toLong() ?: -1)
+        }
     }
 
     override fun showHintAnim() {

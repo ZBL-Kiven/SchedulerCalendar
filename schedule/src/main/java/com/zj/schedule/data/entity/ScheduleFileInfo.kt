@@ -1,6 +1,8 @@
 package com.zj.schedule.data.entity
 
-class ScheduleFileInfo {
+import java.io.Serializable
+
+class ScheduleFileInfo : Serializable {
 
     var meetingId: Long = 0
     var url: String? = ""
@@ -12,7 +14,7 @@ class ScheduleFileInfo {
     //0-正常 1-已经删除
     var status: Long = 0
     var id: Long = 0
-    var createTime: String? = ""
-    var updateTime: String? = ""
+    var createTime: Long = 0
+    var updateTime: Long = 0
 
 }

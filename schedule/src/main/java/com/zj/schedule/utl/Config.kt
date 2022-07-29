@@ -1,5 +1,7 @@
 package com.zj.schedule.utl
 
+import com.zj.schedule.cv.i.MeetingFuncIn
+
 interface Config {
 
     fun getApiHost(): String
@@ -14,4 +16,5 @@ interface Config {
 
     fun getHeader(): Map<String, String>
 
+    val meetingFuncIn: MeetingFuncIn
 }

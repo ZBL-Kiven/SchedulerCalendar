@@ -4,16 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.zj.cf.annotations.Constrain
 import com.zj.cf.fragments.ConstrainFragment
 import com.zj.loading.DisplayMode
+import com.zj.loading.OverLapMode
 import com.zj.loading.ZRotateLoadingView
 import com.zj.schedule.cv.ScheduleHeaderView
 import com.zj.schedule.cv.ScheduleNavBar
 import com.zj.schedule.cv.i.MeetingItemIn
+import com.zj.schedule.cv.pop.FilesMenuPop
 import com.zj.schedule.data.api.ScheduleApi
-import com.zj.views.list.views.EmptyRecyclerView
+import com.zj.schedule.data.entity.ScheduleFileInfo
+import com.zj.schedule.files.FileListAdapter
+import com.zj.schedule.files.FilePreviewFragment
+import com.zj.views.list.listeners.ItemClickListener
 import kotlinx.coroutines.launch
 
 
@@ -22,10 +29,11 @@ class MeetingDetailFragment : ConstrainFragment() {
 
     private var headerView: ScheduleHeaderView? = null
     private var navView: ScheduleNavBar? = null
-    private var rvFiles: EmptyRecyclerView<Int>? = null
+    private var rvFiles: RecyclerView? = null
     private var vBack: View? = null
     private var originData: MeetingItemIn? = null
     private var blv: ZRotateLoadingView? = null
+    private val fileAdapter = FileListAdapter()
 
     override fun getView(inflater: LayoutInflater, container: ViewGroup?): View {
         return inflater.inflate(R.layout.calendar_schedule_detail_layout, container, false)
@@ -50,6 +58,7 @@ class MeetingDetailFragment : ConstrainFragment() {
         rvFiles = find(R.id.calendar_schedule_detail_rv_files)
         navView = find(R.id.calendar_schedule_detail_nav)
         blv = find(R.id.calendar_schedule_detail_blv)
+        rvFiles?.adapter = fileAdapter
         vBack?.setOnClickListener {
             finish()
         }
@@ -58,6 +67,34 @@ class MeetingDetailFragment : ConstrainFragment() {
                 setData(it)
             }
         }
+        fileAdapter.setOnItemClickListener(object : ItemClickListener<ScheduleFileInfo>() {
+
+            override fun onItemClick(position: Int, v: View?, m: ScheduleFileInfo?) {
+                val b = Bundle()
+                b.putSerializable("fileInfo", m)
+                startFragment(FilePreviewFragment::class.java, b)
+            }
+
+            override fun onItemLongClick(position: Int, v: View?, m: ScheduleFileInfo?): Boolean {
+                v?.let {
+                    FilesMenuPop.dismiss()
+                    FilesMenuPop.show(v, m, position) { b, b1, p, _ ->
+                        if (b) {
+                            blv?.setMode(DisplayMode.LOADING, OverLapMode.FLOATING)
+                        } else {
+                            blv?.setMode(DisplayMode.NORMAL)
+                            if (b1) {
+                                fileAdapter.remove(p)
+                                Toast.makeText(v.context, R.string.Delete_files_success, Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(v.context, R.string.Delete_files_failed, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+                return super.onItemLongClick(position, v, m)
+            }
+        })
     }
 
     private fun setData(meetingItemIn: MeetingItemIn) {
@@ -80,13 +117,7 @@ class MeetingDetailFragment : ConstrainFragment() {
             val fs = files.data ?: return@launch
             headerView?.setFoldersCount(fs.size)
             if (fs.isNullOrEmpty().not()) {
-//                rvFiles?.setData(R.layout.calendar_item_schedule, false, , object : BaseAdapterDataSet<Int>() {
-//                    override fun initData(holder: BaseViewHolder<Int>?, position: Int, module: Int?) {
-//                        holder?.getView<TextView>(R.id.calendar_item_tv_start_time)?.let {
-//                            it.text = "$module"
-//                        }
-//                    }
-//                })
+                fileAdapter.change(fs)
             }
         }
     }

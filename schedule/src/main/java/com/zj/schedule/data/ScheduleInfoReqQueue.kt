@@ -68,6 +68,7 @@ object ScheduleInfoReqQueue {
         requesting.forEach { (_, scheduleReqBean) ->
             req?.onCanceled(scheduleReqBean)
         }
+        curData.clear()
         requesting.clear()
         reqCancelAbleData.clear()
     }

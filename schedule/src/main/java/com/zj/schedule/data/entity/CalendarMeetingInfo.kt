@@ -118,6 +118,10 @@ class CalendarMeetingInfo : ScheduleItemIn {
         return meetingCode
     }
 
+    override fun getMeetingSecret(): String {
+        return secret
+    }
+
     override fun getMeetingOwnerName(): String {
         return ownerName
     }

@@ -8,15 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import com.zj.calendar.Calendar
 import com.zj.calendar.CalendarLayout
 import com.zj.calendar.CalendarView
 import com.zj.cf.annotations.Constrain
 import com.zj.cf.fragments.ConstrainFragment
-import com.zj.cf.managers.ConstrainFragmentManager
-import com.zj.cf.startFragment
 import com.zj.loading.DisplayMode
 import com.zj.loading.ZRotateLoadingView
 import com.zj.schedule.cv.CollapsedRecyclerView
@@ -24,28 +21,18 @@ import com.zj.schedule.cv.ScheduleStatusItemView
 import com.zj.schedule.cv.i.ScheduleItemIn
 import com.zj.schedule.data.ScheduleInfoReqQueue
 import com.zj.schedule.data.entity.CalendarMeetingInfo
-import com.zj.schedule.utl.Config
 import com.zj.schedule.utl.InitScheduleInfo
 import com.zj.schedule.utl.Utl
 import com.zj.views.list.adapters.BaseAdapter
 import com.zj.views.list.holders.BaseViewHolder
 import com.zj.views.list.listeners.ItemClickListener
-import java.lang.Exception
-import java.lang.IllegalArgumentException
 import java.util.*
 
 @Constrain(id = "CalendarFragment", backMode = 1)
 class CalendarFragment : ConstrainFragment(), CalendarView.OnCalendarSelectListener, CalendarView.OnYearChangeListener, CalendarView.OnViewChangeListener, ScheduleInfoReqQueue.ScheduleReq {
 
     companion object {
-
-        private const val SCHEDULE_ID = "schedule_id"
-
-        fun start(act: AppCompatActivity, vg: ViewGroup, config: Config, scheduleInfo: InitScheduleInfo? = null): ConstrainFragmentManager {
-            Utl.config = config
-            val b = bundleOf(Pair(SCHEDULE_ID, scheduleInfo))
-            return act.startFragment(CalendarFragment::class.java, vg, b, { true }, null)
-        }
+        const val SCHEDULE_ID = "schedule_id"
     }
 
     private var mTextMonthDay: TextView? = null

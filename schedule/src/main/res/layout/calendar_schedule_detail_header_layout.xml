@@ -85,30 +85,36 @@
         app:dtv_textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_dtv_duration" />
 
-    <com.zj.dtv.DrawableTextView
-        android:id="@+id/calendar_schedule_detail_dtv_key"
+    <LinearLayout
+        android:id="@+id/calendar_schedule_detail_ll_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:dtv_badgeBackground="@drawable/calendar_schedule_detail_key_hide"
-        app:dtv_badgeBackgroundSelected="@drawable/calendar_schedule_detail_key_show"
-        app:dtv_badgeEnable="true"
-        app:dtv_badgeInGravity="RIGHT|CENTER"
-        app:dtv_badgeMarginStart="38dp"
-        app:dtv_badgeMinHeight="36dp"
-        app:dtv_badgeMinWidth="36dp"
-        app:dtv_badgeText=" "
-        app:dtv_drawableHeight="20dp"
-        app:dtv_drawablePadding="12dp"
-        app:dtv_drawableWidth="20dp"
-        app:dtv_gravity="LEFT"
-        app:dtv_paddingBottom="8dp"
-        app:dtv_paddingTop="8dp"
-        app:dtv_replaceDrawable="@mipmap/calendar_icon_schedule_detail_key"
-        app:dtv_selectedDrawable="@mipmap/calendar_icon_schedule_detail_key"
-        app:dtv_textColor="#ccffffff"
-        app:dtv_textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_dtv_id" />
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_dtv_id">
+
+        <View
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@mipmap/calendar_icon_schedule_detail_key" />
+
+        <TextView
+            android:id="@+id/calendar_schedule_detail_tv_key"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="#ccffffff"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/calendar_schedule_detail_iv_key"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="2dp"
+            android:padding="10dp"
+            android:src="@drawable/calendar_schedule_detail_key_show" />
+
+    </LinearLayout>
 
     <com.zj.dtv.DrawableTextView
         android:id="@+id/calendar_schedule_detail_dtv_owner"
@@ -122,7 +128,7 @@
         app:dtv_replaceDrawable="@mipmap/calendar_icon_schedule_detail_owner"
         app:dtv_textColor="#ccffffff"
         app:dtv_textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_dtv_key" />
+        app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_ll_key" />
 
     <com.zj.dtv.DrawableTextView
         android:id="@+id/calendar_schedule_detail_dtv_host"

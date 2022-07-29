@@ -1,38 +1,22 @@
 package com.zj.swipeRv
 
 import android.os.Bundle
-import android.view.KeyEvent
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.zj.cf.managers.ConstrainFragmentManager
+import androidx.core.os.bundleOf
+import com.zj.schedule.CalendarFragment
+import com.zj.schedule.CalendarFragment.Companion.SCHEDULE_ID
+import com.zj.schedule.NavigationToConstrainFragment
+import com.zj.schedule.cv.i.MeetingFuncIn
+import com.zj.schedule.files.FileListFragment
+import com.zj.schedule.utl.Config
+import com.zj.schedule.utl.InitScheduleInfo
 
+class MainActivity : AppCompatActivity(), MeetingFuncIn {
 
-class MainActivity : AppCompatActivity() {
+    private val config = object : com.zj.schedule.utl.Config {
 
-    private var fm: ConstrainFragmentManager? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
-
-    fun startFrg(view: View) {
-        fm?.clearStack(false)
-        val time = System.currentTimeMillis()
-        fm = com.zj.schedule.CalendarFragment.start(this, findViewById(android.R.id.content), Config(), com.zj.schedule.utl.InitScheduleInfo(time, "1000001"))
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (fm?.getTopOfStack() != null) {
-                fm?.finishTopFragment()
-                return false
-            }
-        }
-        return super.onKeyDown(keyCode, event)
-    }
-
-    class Config : com.zj.schedule.utl.Config {
         override fun getApiHost(): String {
             return "https://api.dev.utown.io:3080"
         }
@@ -60,5 +44,50 @@ class MainActivity : AppCompatActivity() {
                 this["Content-Type"] = "application/json"
             }
         }
+
+        override val meetingFuncIn: MeetingFuncIn; get() = this@MainActivity
+    }
+
+    private lateinit var c: NavigationToConstrainFragment
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        c = NavigationToConstrainFragment.create(config, this)
+    }
+
+    fun startCalendarFrg(view: View) {
+        val scheduleInfo = InitScheduleInfo(System.currentTimeMillis(), "595")
+        val b = bundleOf(Pair(SCHEDULE_ID, scheduleInfo))
+        c.start(this, findViewById(android.R.id.content), CalendarFragment::class.java, b) {
+            true
+        }
+    }
+
+    fun startFileListFrg(view: View) {
+        val b = bundleOf(Pair("meetingId", "595"))
+        c.start(this, findViewById(android.R.id.content), FileListFragment::class.java, b) {
+            true
+        }
+    }
+
+    override fun joinMeeting(meetingId: Long) {
+        Log.e("------- ", "joinMeeting")
+    }
+
+    override fun invite(meetingId: Long) {
+        Log.e("------- ", "invite")
+    }
+
+    override fun start(meetingId: Long) {
+        Log.e("------- ", "start")
+    }
+
+    override fun edit(meetingId: Long) {
+        Log.e("------- ", "edit")
+    }
+
+    override fun cancel(meetingId: Long) {
+        Log.e("------- ", "cancel")
     }
 }

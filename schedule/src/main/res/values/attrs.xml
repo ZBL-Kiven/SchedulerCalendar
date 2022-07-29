@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <item name="download_state_tag" type="id" />
+
     <declare-styleable name="CustomStatusBgView">
         <attr name="status" format="integer" />
         <attr name="bg" format="integer" />
@@ -13,6 +15,13 @@
     <declare-styleable name="CusUserBgView">
         <attr name="strokeWidth" format="dimension" />
         <attr name="strokeColor" format="color|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ProgressBarView">
+        <attr name="ringColor" format="color" />
+        <attr name="ringProgressColor" format="color" />
+        <attr name="ringWidth" format="dimension" />
+        <attr name="max" format="integer" />
     </declare-styleable>
 
 </resources>

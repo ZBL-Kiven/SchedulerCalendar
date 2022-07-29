@@ -35,14 +35,48 @@
         <entry key="calendar/src/main/res/drawable/ic_launcher_background.xml" value="0.3165" />
         <entry key="calendar/src/main/res/layout/cv_layout_calendar_view.xml" value="0.34375" />
         <entry key="calendar/src/main/res/layout/cv_week_bar.xml" value="0.34375" />
+        <entry key="schedule/src/main/res/drawable/calendar_schedule_bg.xml" value="0.3815" />
         <entry key="schedule/src/main/res/drawable/calendar_schedule_detail_key_look.xml" value="0.3815" />
         <entry key="schedule/src/main/res/drawable/calendar_schedule_detail_key_show.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/calendar_schedule_expand.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/calendar_schedule_files_item_bg.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/calendar_schedule_files_uploading_icon.xml" value="0.373" />
+        <entry key="schedule/src/main/res/drawable/circle_f65f2a.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/icon_loading.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/radius_12_1af6.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/radius_12_22bb3b.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/radius_12_3b3b3b.xml" value="0.3345" />
+        <entry key="schedule/src/main/res/drawable/radius_12_f65f2A.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/radius_12_f65f2a.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/radius_12_ff4e4e4e.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/radius_16_cc000000.xml" value="0.3815" />
         <entry key="schedule/src/main/res/drawable/radius_32_272727.xml" value="0.298" />
+        <entry key="schedule/src/main/res/drawable/radius_3_22bb3b_circle.xml" value="0.3455" />
+        <entry key="schedule/src/main/res/drawable/radius_4_33ffffff.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/radius_8_3b3b3b.xml" value="0.3815" />
+        <entry key="schedule/src/main/res/drawable/uploading_seek_bar_bg.xml" value="0.3815" />
         <entry key="schedule/src/main/res/layout/activity_main.xml" value="0.2942708333333333" />
+        <entry key="schedule/src/main/res/layout/calendar_files_uploading_item.xml" value="0.34375" />
+        <entry key="schedule/src/main/res/layout/calendar_files_uploading_item_files.xml" value="0.550698030911959" />
+        <entry key="schedule/src/main/res/layout/calendar_item_schedule.xml" value="0.5677083333333334" />
         <entry key="schedule/src/main/res/layout/calendar_schedule_detail_header_layout.xml" value="0.2942708333333333" />
+        <entry key="schedule/src/main/res/layout/calendar_schedule_detail_item_files.xml" value="0.8488305712503099" />
+        <entry key="schedule/src/main/res/layout/calendar_schedule_detail_layout.xml" value="0.5911458333333334" />
+        <entry key="schedule/src/main/res/layout/calendar_schedule_detail_nav_layout.xml" value="0.5911458333333334" />
+        <entry key="schedule/src/main/res/layout/calendar_schedule_meeting_item_files.xml" value="0.5911458333333334" />
+        <entry key="schedule/src/main/res/layout/confirm_pop_layout.xml" value="0.5911458333333334" />
+        <entry key="schedule/src/main/res/layout/empty.xml" value="0.5770833333333333" />
+        <entry key="schedule/src/main/res/layout/files_download_hint_layout.xml" value="0.5911458333333334" />
+        <entry key="schedule/src/main/res/layout/files_list_fragment_layout.xml" value="0.4196400960286458" />
+        <entry key="schedule/src/main/res/layout/files_menu_pop_layout.xml" value="0.5911458333333334" />
+        <entry key="schedule/src/main/res/layout/files_preview_fragment_layout.xml" value="0.5911458333333334" />
+        <entry key="schedule/src/main/res/layout/files_uploading_fragment_layout.xml" value="0.5911458333333334" />
+        <entry key="swipe/src/main/res/layout/x_recycler_view_item.xml" value="0.34375" />
+        <entry key="swipe/src/main/res/layout/x_recycler_view_load_more.xml" value="0.34375" />
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

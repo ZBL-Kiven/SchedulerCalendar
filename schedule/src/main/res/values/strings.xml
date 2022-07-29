@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Schedule calendar</string>
-
     <string name="Loading">Loading…</string>
     <string name="No_schedule">No schedule</string>
+    <string name="No_File">No file yet</string>
     <string name="No_schedule_hint_txt">Another day with nothing to do</string>
 
     <string name="schedule">Schedule</string>
@@ -17,12 +17,27 @@
     <string name="Invite">Invite</string>
     <string name="Edit">Edit</string>
     <string name="Cancel">Cancel</string>
+    <string name="Delete">Delete</string>
+    <string name="Upload">Upload</string>
+    <string name="Download">Download</string>
+    <string name="Files">Files</string>
+    <string name="CancelDownload">Cancel Download</string>
+    <string name="OpenFile">Open File</string>
 
-    <string name="ID_">ID: %s</string>
-    <string name="MeetingKey_">Meeting Key: %s</string>
-    <string name="Organizer_">Organizer: %s</string>
-    <string name="host_">Host: %s</string>
+    <string name="ID_">ID：%s</string>
+    <string name="MeetingKey_">Meeting Key：\t</string>
+    <string name="Organizer_">Organizer：%s</string>
+    <string name="host_">Host：%s</string>
+    <string name="Owner_">Owner：%s</string>
+    <string name="FileSize">File Size：%s</string>
     <string name="Member_">Member (%d)</string>
-    <string name="Meeting_Folder_">Meeting Folder (%d)</string>
+    <string name="Meeting_Folder_">Files (%d)</string>
     <string name="Meeting_removed_hint">You have been removed from the meeting.</string>
+
+    <string name="Delete_files_confirm">Are you sure you want to delete this file?</string>
+    <string name="Cannot_Open_file">No matched app to open the file, please check it or re-download after delete.</string>
+    <string name="Delete_files_success">Delete file success!</string>
+    <string name="Delete_files_failed">Failed to delete the file!</string>
+    <string name="Success_for_U_or_D">Contents of the %1$s \n%2$s completed</string>
+    <string name="Download_failed_hint">Download failed, please try again later</string>
 </resources>

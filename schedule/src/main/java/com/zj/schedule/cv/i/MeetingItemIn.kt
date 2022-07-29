@@ -14,6 +14,7 @@ interface MeetingItemIn : Serializable {
     fun hasFiles(): Boolean
     fun getMeetingId(): String
     fun getMeetingKey(): String
+    fun getMeetingSecret(): String
     fun getMeetingOwnerName(): String
     fun getHostName(): String
     fun getMeetingOwnerId(): Long

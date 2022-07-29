@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/files_menu_pop_layout_tv_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radius_8_3b3b3b"
+        android:minWidth="112dp"
+        android:padding="8dp"
+        android:text="@string/Delete"
+        android:textColor="#fff"
+        android:textSize="14sp" />
+
+</LinearLayout>

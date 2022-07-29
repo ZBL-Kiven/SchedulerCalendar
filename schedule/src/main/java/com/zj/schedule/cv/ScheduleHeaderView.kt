@@ -2,11 +2,15 @@ package com.zj.schedule.cv
 
 import android.content.Context
 import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -16,6 +20,7 @@ import com.zj.schedule.cv.i.MeetingItemIn
 import com.zj.schedule.cv.i.MeetingMemberIn
 import com.zj.schedule.cv.i.Status
 import com.zj.schedule.utl.Utl
+import kotlin.math.roundToInt
 
 class ScheduleHeaderView @JvmOverloads constructor(c: Context, attr: AttributeSet? = null, def: Int = 0) : ConstraintLayout(c, attr, def) {
 
@@ -26,7 +31,9 @@ class ScheduleHeaderView @JvmOverloads constructor(c: Context, attr: AttributeSe
     private lateinit var tvRemoved: TextView
     private lateinit var dtvTime: DrawableTextView
     private lateinit var dtvId: DrawableTextView
-    private lateinit var dtvMeetingKey: DrawableTextView
+    private lateinit var llMeetingKey: LinearLayout
+    private lateinit var tvMeetingKey: TextView
+    private lateinit var ivMeetingKey: AppCompatImageView
     private lateinit var dtvOrganizer: DrawableTextView
     private lateinit var dtvHost: DrawableTextView
     private lateinit var dtvDuration: DrawableTextView
@@ -46,7 +53,9 @@ class ScheduleHeaderView @JvmOverloads constructor(c: Context, attr: AttributeSe
         tvStatus = findViewById(R.id.calendar_schedule_detail_tv_status)
         dtvTime = findViewById(R.id.calendar_schedule_detail_dtv_time)
         dtvId = findViewById(R.id.calendar_schedule_detail_dtv_id)
-        dtvMeetingKey = findViewById(R.id.calendar_schedule_detail_dtv_key)
+        llMeetingKey = findViewById(R.id.calendar_schedule_detail_ll_key)
+        tvMeetingKey = findViewById(R.id.calendar_schedule_detail_tv_key)
+        ivMeetingKey = findViewById(R.id.calendar_schedule_detail_iv_key)
         dtvOrganizer = findViewById(R.id.calendar_schedule_detail_dtv_owner)
         dtvHost = findViewById(R.id.calendar_schedule_detail_dtv_host)
         dtvDuration = findViewById(R.id.calendar_schedule_detail_dtv_duration)
@@ -67,7 +76,7 @@ class ScheduleHeaderView @JvmOverloads constructor(c: Context, attr: AttributeSe
         val color = if (item.getStatus() == Status.Canceled || item.getStatus() == Status.Ended) ContextCompat.getColor(context, R.color.c_6fff) else Color.WHITE
         tvStatus.setTextColor(color)
         tvStatus.text = context.getString(item.getStatus().strId)
-        dtvMeetingKey.isVisible = !item.hasBeenRemoved()
+        llMeetingKey.isVisible = !item.hasBeenRemoved() && item.getMeetingSecret().isNotEmpty()
         dtvHost.isVisible = item.getHostName().isNotEmpty() && !item.hasBeenRemoved()
         dtvId.isVisible = !item.hasBeenRemoved()
         dtvOrganizer.isVisible = !item.hasBeenRemoved()
@@ -92,13 +101,14 @@ class ScheduleHeaderView @JvmOverloads constructor(c: Context, attr: AttributeSe
             sb.isNotEmpty()
         } else false
         if (item.hasBeenRemoved()) return
-        dtvMeetingKey.setOnBadgeClickListener {
+        ivMeetingKey.setOnClickListener {
             it.isSelected = !it.isSelected
             updateMeetingKeyState(item)
         }
+        ivMeetingKey.isSelected = true
         updateMeetingKeyState(item)
         dtvHost.text = context.getString(R.string.host_, item.getHostName())
-        dtvId.text = context.getString(R.string.ID_, item.getMeetingId())
+        dtvId.text = context.getString(R.string.ID_, item.getMeetingKey())
         dtvOrganizer.text = context.getString(R.string.Organizer_, item.getMeetingOwnerName())
         tvFolder.text = context.getString(R.string.Meeting_Folder_, 0)
     }
@@ -113,18 +123,23 @@ class ScheduleHeaderView @JvmOverloads constructor(c: Context, attr: AttributeSe
     }
 
     private fun updateMeetingKeyState(item: MeetingItemIn) {
-        if (dtvMeetingKey.isSelected) {
-            val key = item.getMeetingKey().let {
-                val sb = StringBuilder()
-                repeat(it.length) {
-                    sb.append("✲")
+        if (ivMeetingKey.isSelected) {
+            val s = context.getString(R.string.MeetingKey_)
+            val key = item.getMeetingSecret().let {
+                val sb = SpannableStringBuilder(s + it)
+                val d = ContextCompat.getDrawable(context, R.mipmap.schedule_meeting_pwd_staff) ?: return@let null
+                val size = (tvMeetingKey.textSize / 2f).roundToInt()
+                d.setBounds(0, 0, size, size)
+                repeat(it.length) { i ->
+                    val span = ImageSpan(d, ImageSpan.ALIGN_BASELINE)
+                    sb.setSpan(span, s.length + i, s.length + i + 1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
                 }
-                sb.toString()
+                return@let sb
             }
-            dtvMeetingKey.textSelected = context.getString(R.string.MeetingKey_, key)
+            tvMeetingKey.text = key
         } else {
-            val key = item.getMeetingKey()
-            dtvMeetingKey.text = context.getString(R.string.MeetingKey_, key)
+            val key = context.getString(R.string.MeetingKey_) + item.getMeetingSecret()
+            tvMeetingKey.text = key
         }
     }
 

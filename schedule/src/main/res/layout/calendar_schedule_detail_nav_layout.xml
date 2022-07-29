@@ -5,13 +5,14 @@
     android:id="@+id/calendar_schedule_detail_nav_ll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:parentTag="android.widget.LinearLayout">
+    android:gravity="center"
+    tools:background="@color/black"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <com.zj.dtv.DrawableTextView
         android:id="@+id/calendar_schedule_detail_nav_invite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         app:dtv_drawableHeight="20dp"
         app:dtv_drawablePadding="1dp"
         app:dtv_drawableWidth="20dp"
@@ -20,13 +21,16 @@
         app:dtv_text="@string/Invite"
         app:dtv_textColor="#ccffffff"
         app:dtv_textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_dtv_owner" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/calendar_schedule_detail_nav_start"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.zj.dtv.DrawableTextView
         android:id="@+id/calendar_schedule_detail_nav_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         app:dtv_drawableHeight="20dp"
         app:dtv_drawablePadding="1dp"
         app:dtv_drawableWidth="20dp"
@@ -35,13 +39,16 @@
         app:dtv_text="@string/Start"
         app:dtv_textColor="#ccffffff"
         app:dtv_textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_dtv_owner" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/calendar_schedule_detail_nav_edit"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/calendar_schedule_detail_nav_invite"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.zj.dtv.DrawableTextView
         android:id="@+id/calendar_schedule_detail_nav_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         app:dtv_drawableHeight="20dp"
         app:dtv_drawablePadding="1dp"
         app:dtv_drawableWidth="20dp"
@@ -50,13 +57,16 @@
         app:dtv_text="@string/Edit"
         app:dtv_textColor="#ccffffff"
         app:dtv_textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_dtv_owner" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/calendar_schedule_detail_nav_cancel"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/calendar_schedule_detail_nav_start"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.zj.dtv.DrawableTextView
         android:id="@+id/calendar_schedule_detail_nav_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         app:dtv_drawableHeight="20dp"
         app:dtv_drawablePadding="1dp"
         app:dtv_drawableWidth="20dp"
@@ -65,13 +75,16 @@
         app:dtv_text="@string/Cancel"
         app:dtv_textColor="#ccffffff"
         app:dtv_textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_dtv_owner" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/calendar_schedule_detail_nav_join"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/calendar_schedule_detail_nav_edit"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.zj.dtv.DrawableTextView
         android:id="@+id/calendar_schedule_detail_nav_join"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         app:dtv_drawableHeight="20dp"
         app:dtv_drawablePadding="1dp"
         app:dtv_drawableWidth="20dp"
@@ -80,6 +93,10 @@
         app:dtv_text="@string/Join"
         app:dtv_textColor="#ccffffff"
         app:dtv_textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/calendar_schedule_detail_dtv_owner" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/calendar_schedule_detail_nav_cancel"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </merge>
