@@ -2,14 +2,11 @@ package com.zj.schedule.utl.sp
 
 import android.content.Context
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.zj.schedule.utl.io.FileNetInfo
 import com.zj.schedule.utl.io.FileState
 import java.io.File
 
 internal object FileSPHelper {
-
-    private const val ALL_FILES_INFO_KEYS = "all_files_info_keys"
 
     operator fun <T : Any> get(key: String, defaultValue: T): T? {
         return Preference.get(key, defaultValue)
@@ -21,7 +18,7 @@ internal object FileSPHelper {
 
     fun removeFileInfo(key: String) {
         val cached = getFileInfo(key)
-        cached?.translationPath?.let {
+        cached?.localPath?.let {
             File(it).delete()
         }
         Preference.put(key, null)
@@ -32,6 +29,14 @@ internal object FileSPHelper {
         return Gson().fromJson(s, FileNetInfo::class.java)
     }
 
+    fun findLocalFromUrl(url: String): FileNetInfo? {
+        val lst = getAllFiles()
+        lst.filter {
+            it.url == url || it.originalPath == url
+        }
+        return lst.firstOrNull()
+    }
+
     fun init(name: String, context: Context?) {
         context?.let {
             Preference.init(name, context)
@@ -40,17 +45,33 @@ internal object FileSPHelper {
                 if (it.state == FileState.Waiting.name) {
                     it.state = FileState.Failed.name
                 }
-                newArray.add(it)
+                var needAdd = true
+                if (it.state == FileState.Success.name) {
+                    val f = File(it.localPath)
+                    if (it.localPath.isEmpty() || !f.exists() || f.length() <= 0) {
+                        needAdd = false
+                    }
+                }
+                if (needAdd) newArray.add(it)
             }
-            Preference.put(ALL_FILES_INFO_KEYS, Gson().toJson(newArray))
+            Preference.clear()
+            newArray.forEach {
+                run run@{
+                    val k = if (it.type == 0) it.originalPath else it.url ?: return@run
+                    Preference.put(k, Gson().toJson(it))
+                }
+            }
         }
     }
 
     fun getAllFiles(): MutableList<FileNetInfo> {
-        val s = get(ALL_FILES_INFO_KEYS, "")
+        val s = Preference.getAll()
         if (s.isNullOrEmpty()) return mutableListOf()
-        val type = TypeToken.getArray(FileNetInfo::class.java).type
-        val l = Gson().fromJson<Array<FileNetInfo>>(s, type)
-        return if (l.isNullOrEmpty()) mutableListOf() else l.toMutableList()
+        val gson = Gson()
+        return s.mapNotNullTo(mutableListOf()) {
+            kotlin.runCatching {
+                gson.fromJson(it.value.toString(), FileNetInfo::class.java)
+            }.getOrNull()
+        }
     }
 }

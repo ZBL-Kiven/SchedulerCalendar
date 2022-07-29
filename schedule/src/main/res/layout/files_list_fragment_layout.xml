@@ -43,7 +43,8 @@
         android:id="@+id/files_list_fragment_layout_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/files_list_fragment_layout_upload"
         app:layout_constraintTop_toBottomOf="@id/files_list_fragment_layout_tv_files"
@@ -53,7 +54,9 @@
         android:id="@+id/files_list_fragment_layout_blv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="120dp"
         app:backgroundFill="@color/black"
+        app:backgroundUnderTheContent="@drawable/radius_16_3b3b3b"
         app:drawerHeight="180dp"
         app:drawerWidth="180dp"
         app:hintColor="#fff"
@@ -63,7 +66,6 @@
         app:hintTextStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/files_list_fragment_layout_rv"
         app:layout_constraintTop_toTopOf="@id/files_list_fragment_layout_rv"
-        app:loadingText="@string/Loading"
         app:loading_height="45dp"
         app:loading_width="45dp"
         app:noDataText="@string/No_File"
@@ -73,8 +75,8 @@
         app:refreshTextSize="14sp"
         app:rotate_loadingRes="@drawable/icon_loading"
         app:rotate_noDataRes="@mipmap/schedule_file_list_no_file"
-        app:shownMode="floating"
-        app:viewGravity="center_horizontal|bottom" />
+        app:shownMode="overlap"
+        app:viewGravity="center" />
 
     <TextView
         android:id="@+id/files_list_fragment_layout_upload"

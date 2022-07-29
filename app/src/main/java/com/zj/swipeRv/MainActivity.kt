@@ -15,7 +15,7 @@ import com.zj.schedule.utl.InitScheduleInfo
 
 class MainActivity : AppCompatActivity(), MeetingFuncIn {
 
-    private val config = object : com.zj.schedule.utl.Config {
+    private val config = object : Config {
 
         override fun getApiHost(): String {
             return "https://api.dev.utown.io:3080"
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), MeetingFuncIn {
     }
 
     fun startCalendarFrg(view: View) {
-        val scheduleInfo = InitScheduleInfo(System.currentTimeMillis(), "595")
+        val scheduleInfo = InitScheduleInfo(System.currentTimeMillis(), "1012")
         val b = bundleOf(Pair(SCHEDULE_ID, scheduleInfo))
         c.start(this, findViewById(android.R.id.content), CalendarFragment::class.java, b) {
             true
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), MeetingFuncIn {
     }
 
     fun startFileListFrg(view: View) {
-        val b = bundleOf(Pair("meetingId", "595"))
+        val b = bundleOf(Pair("meetingId", 1012L))
         c.start(this, findViewById(android.R.id.content), FileListFragment::class.java, b) {
             true
         }

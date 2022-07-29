@@ -20,7 +20,7 @@
         android:id="@+id/files_uploading_fragment_layout_tv_files"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Files"
+        android:text="@string/UploadList"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -57,5 +57,33 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <com.zj.loading.ZRotateLoadingView
+        android:id="@+id/files_uploading_fragment_layout_blv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="120dp"
+        app:backgroundFill="@color/black"
+        app:backgroundUnderTheContent="@drawable/radius_16_3b3b3b"
+        app:drawerHeight="180dp"
+        app:drawerWidth="180dp"
+        app:hintColor="#fff"
+        app:hintMarginBottom="4dp"
+        app:hintMarginTop="16dp"
+        app:hintTextSize="16sp"
+        app:hintTextStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/files_uploading_fragment_layout_rv"
+        app:layout_constraintTop_toTopOf="@id/files_uploading_fragment_layout_rv"
+        app:loading_height="45dp"
+        app:loading_width="45dp"
+        app:noDataText="@string/No_File"
+        app:no_data_height="160dp"
+        app:no_data_width="160dp"
+        app:refreshTextColor="#99ffffff"
+        app:refreshTextSize="14sp"
+        app:rotate_loadingRes="@drawable/icon_loading"
+        app:rotate_noDataRes="@mipmap/schedule_file_list_no_file"
+        app:shownMode="overlap"
+        app:viewGravity="center" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

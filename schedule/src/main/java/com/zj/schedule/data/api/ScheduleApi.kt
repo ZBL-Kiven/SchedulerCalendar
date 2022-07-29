@@ -21,7 +21,7 @@ private val scheduleUrl = object : UrlProvider() {
 
 internal val ScheduleApi by lazy {
     val logLevel = LogLevel.RESULT_BODY + LogLevel.REQUEST_BODY + LogLevel.BASIC + LogLevel.HEADERS
-    ZApi.create(ScheduleService::class.java).header(scheduleHeader).logLevel(logLevel).baseUrl(scheduleUrl).timeOut(5000).build()
+    ZApi.create(ScheduleService::class.java).timeOut(5000).header(scheduleHeader).logLevel(logLevel).baseUrl(scheduleUrl).build()
 }
 
 internal object Body {

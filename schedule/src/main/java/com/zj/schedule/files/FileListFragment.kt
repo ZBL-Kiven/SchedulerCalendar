@@ -1,22 +1,28 @@
 package com.zj.schedule.files
 
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.zj.api.uploader.FileUploadListener
 import com.zj.cf.annotations.Constrain
 import com.zj.cf.fragments.ConstrainFragment
 import com.zj.loading.DisplayMode
+import com.zj.loading.OverLapMode
 import com.zj.loading.ZRotateLoadingView
 import com.zj.schedule.R
+import com.zj.schedule.cv.pop.FilesMenuPop
 import com.zj.schedule.data.api.ScheduleApi
 import com.zj.schedule.data.entity.ScheduleFileInfo
+import com.zj.schedule.files.l.UploadListener
 import com.zj.schedule.utl.Utl
 import com.zj.schedule.utl.io.FileNetInfo
 import com.zj.schedule.utl.io.FileState
@@ -25,12 +31,11 @@ import com.zj.schedule.utl.sp.FileSPHelper
 import com.zj.views.list.listeners.ItemClickListener
 import kotlinx.coroutines.launch
 
-
 /**
  * Required params "meetingId"
  * */
 @Constrain(id = "file_list_fragment", backMode = 1)
-class FileListFragment : ConstrainFragment(), FileUploadListener {
+class FileListFragment : ConstrainFragment() {
 
     private var meetingId: Long = -1
     private var ivBack: View? = null
@@ -39,6 +44,23 @@ class FileListFragment : ConstrainFragment(), FileUploadListener {
     private var vUpload: TextView? = null
     private var vUploading: View? = null
     private var adapter = FileListAdapter()
+    private var refreshOnResume = false
+
+    private var uploadListener = object : UploadListener {
+
+        override fun onSuccess(uploadId: String, body: ScheduleFileInfo?, totalBytes: Long) {
+            if (isResume) {
+                adapter.add(body)
+                blv?.setMode(DisplayMode.NORMAL)
+            } else {
+                refreshOnResume = true
+            }
+        }
+    }
+
+    private var reasonObserver = { t: MutableSet<String>? ->
+        vUploading?.isSelected = !t.isNullOrEmpty()
+    }
 
     override fun onPostValue(bundle: Bundle?) {
         super.onPostValue(bundle)
@@ -46,7 +68,7 @@ class FileListFragment : ConstrainFragment(), FileUploadListener {
     }
 
     override fun getView(inflater: LayoutInflater, container: ViewGroup?): View {
-        return inflater.inflate(R.layout.files_list_fragment_layout, container)
+        return inflater.inflate(R.layout.files_list_fragment_layout, container, false)
     }
 
     override fun onCreate() {
@@ -57,6 +79,7 @@ class FileListFragment : ConstrainFragment(), FileUploadListener {
         vUpload = find(R.id.files_list_fragment_layout_upload)
         vUploading = find(R.id.files_list_fragment_layout_v_uploading)
         rvContent?.adapter = adapter
+        UploadManager.observeDots(this, reasonObserver)
         ivBack?.setOnClickListener {
             finish()
         }
@@ -69,7 +92,6 @@ class FileListFragment : ConstrainFragment(), FileUploadListener {
             getMeetingFiles()
         }
         vUploading?.setOnClickListener {
-            it.isSelected = false
             startUploadingPage()
         }
         adapter.setOnItemClickListener(object : ItemClickListener<ScheduleFileInfo>() {
@@ -78,15 +100,40 @@ class FileListFragment : ConstrainFragment(), FileUploadListener {
                 b.putSerializable("fileInfo", m)
                 startFragment(FilePreviewFragment::class.java, b)
             }
+
+            override fun onItemLongClick(position: Int, v: View?, m: ScheduleFileInfo?): Boolean {
+                v?.let {
+                    FilesMenuPop.dismiss()
+                    FilesMenuPop.show(v, m, position) { b, b1, p, m1 ->
+                        if (b) {
+                            blv?.setMode(DisplayMode.LOADING, OverLapMode.FLOATING)
+                        } else {
+                            blv?.setMode(DisplayMode.NORMAL)
+                            if (b1) {
+                                adapter.remove(p)
+                                m1?.url?.let l@{ url ->
+                                    val f = FileSPHelper.findLocalFromUrl(url) ?: return@l
+                                    UploadManager.removeADot(f.uploadId)
+                                }
+                                Toast.makeText(v.context, R.string.Delete_files_success, Toast.LENGTH_SHORT).show()
+                                if (adapter.data.isNullOrEmpty()) blv?.setMode(DisplayMode.NO_DATA)
+                            } else {
+                                Toast.makeText(v.context, R.string.Delete_files_failed, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+                return super.onItemLongClick(position, v, m)
+            }
         })
     }
 
     private fun getMeetingFiles() {
         blv?.setMode(DisplayMode.LOADING)
-        val hasUploading = UploadManager.addListener(this@FileListFragment)
+        val hasUploading = UploadManager.addListener(uploadListener)
         lifecycleScope.launch {
             val files = ScheduleApi.getMeetingFiles("$meetingId")
-            if (files.error == null || files.data.isNullOrEmpty()) {
+            if (files.error != null || files.data.isNullOrEmpty()) {
                 adapter.clear()
                 blv?.setMode(DisplayMode.NO_DATA)
             } else {
@@ -99,7 +146,6 @@ class FileListFragment : ConstrainFragment(), FileUploadListener {
         }
     }
 
-
     private fun selectFileToUpload() {
         startFragment(FileSelector::class.java)
     }
@@ -110,28 +156,36 @@ class FileListFragment : ConstrainFragment(), FileUploadListener {
                 FileSPHelper.getFileInfo(u)
             }
             if (fi != null) return@map fi
-            FileNetInfo(0, "", "", it.url, FileState.Success.name)
+            FileNetInfo(0, it.name ?: "", "", "", it.url, FileState.Success.name)
         }
         val b = Bundle()
         b.putString("lst", Gson().toJson(data))
+        b.putLong("meetingId", meetingId)
         startFragment(FileUploadingFragment::class.java)
     }
 
     override fun onFragmentResult(bundle: Bundle?) {
         super.onFragmentResult(bundle)
-        val uri = bundle?.getString("uri")
-        vUploading?.isSelected = true
-        UploadManager.upload(this.requireContext(), uri)
-        startUploadingPage()
+        val uri = bundle?.getParcelable<Uri>("uri")
+        if (uri != null) {
+            UploadManager.upload(this.requireContext(), "$meetingId", uri)
+            Handler(Looper.getMainLooper()).postDelayed({ startUploadingPage() }, 300)
+        }
+    }
+
+    override fun onResumed() {
+        super.onResumed()
+        if (refreshOnResume) {
+            refreshOnResume = false
+            getMeetingFiles()
+        }
     }
 
     override fun finish(onFinished: ((success: Boolean, inTopOfStack: Boolean) -> Unit)?) {
-        UploadManager.removeListener(this)
+        UploadManager.removeDotsObserver(reasonObserver)
+        UploadManager.removeListener(uploadListener)
+        adapter.clear()
         super.finish(onFinished)
-    }
-
-    override fun onSuccess(uploadId: String, body: Any?, totalBytes: Long) {
-        vUploading?.isSelected = true
     }
 }
 

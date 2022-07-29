@@ -26,6 +26,8 @@ import com.zj.schedule.utl.Utl
 import com.zj.views.list.adapters.BaseAdapter
 import com.zj.views.list.holders.BaseViewHolder
 import com.zj.views.list.listeners.ItemClickListener
+import java.lang.StringBuilder
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Constrain(id = "CalendarFragment", backMode = 1)
@@ -216,8 +218,10 @@ class CalendarFragment : ConstrainFragment(), CalendarView.OnCalendarSelectListe
             it.getMeetingId() == scheduleInfo?.scheduleId
         } ?: return
         if (index in 0..adapter.itemCount) {
-            rv.scrollToPosition(index)
-            adapter.notifyItemChanged(index, "checkAnim")
+            rv.smoothScrollToPosition(index)
+            rv.post {
+                adapter.notifyItemChanged(index, "checkAnim")
+            }
         }
     }
 
@@ -240,7 +244,21 @@ class CalendarFragment : ConstrainFragment(), CalendarView.OnCalendarSelectListe
                 it.text = Utl.getDisplayTimeStr(cs, module.getMeetingStartTime())
             }
             holder?.getView<TextView>(R.id.calendar_item_tv_end_time)?.let {
-                it.text = Utl.getDisplayTimeStr(module.getMeetingStartTime(), module.getMeetingEndTime())
+                val startCalendar = module.getStartCalendar()
+                val endCalendar = module.getEndCalendar()
+                val y1 = startCalendar.get(java.util.Calendar.YEAR)
+                val m1 = startCalendar.get(java.util.Calendar.MONTH)
+                val day1 = startCalendar.get(java.util.Calendar.DAY_OF_MONTH)
+                val y2 = endCalendar.get(java.util.Calendar.YEAR)
+                val m2 = endCalendar.get(java.util.Calendar.MONTH)
+                val day2 = endCalendar.get(java.util.Calendar.DAY_OF_MONTH)
+                val date2 = endCalendar.time ?: 0
+                val sb = StringBuilder()
+                if (y1 != y2 || m1 != m2 || day1 != day2) {
+                    sb.append("${Utl.getMonthString(m2)} ${Utl.getDigitsDay(day2)}\n")
+                }
+                sb.append(SimpleDateFormat("HH:mm", Locale.getDefault()).format(date2))
+                it.text = sb
             }
             holder?.getView<ScheduleStatusItemView<ScheduleItemIn>>(R.id.calendar_item_cl)?.let {
                 it.setData(module)

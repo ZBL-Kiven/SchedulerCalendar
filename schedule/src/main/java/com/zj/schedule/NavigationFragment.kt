@@ -21,7 +21,6 @@ class NavigationToConstrainFragment private constructor(val config: Config) {
     }
 
     fun <T : ConstrainFragment> start(activity: FragmentActivity, viewGroup: ViewGroup, cls: Class<T>, bundle: Bundle? = null, clearWhenEmptyStack: () -> Boolean = { true }) {
-
-        activity.startFragment(cls, viewGroup, bundle, clearWhenEmptyStack)
+        Utl.frgManager = activity.startFragment(cls, viewGroup, bundle, clearWhenEmptyStack)
     }
 }

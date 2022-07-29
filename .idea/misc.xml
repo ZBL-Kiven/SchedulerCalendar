@@ -63,6 +63,7 @@
         <entry key="schedule/src/main/res/layout/calendar_schedule_detail_item_files.xml" value="0.8488305712503099" />
         <entry key="schedule/src/main/res/layout/calendar_schedule_detail_layout.xml" value="0.5911458333333334" />
         <entry key="schedule/src/main/res/layout/calendar_schedule_detail_nav_layout.xml" value="0.5911458333333334" />
+        <entry key="schedule/src/main/res/layout/calendar_schedule_layout.xml" value="0.5677083333333334" />
         <entry key="schedule/src/main/res/layout/calendar_schedule_meeting_item_files.xml" value="0.5911458333333334" />
         <entry key="schedule/src/main/res/layout/confirm_pop_layout.xml" value="0.5911458333333334" />
         <entry key="schedule/src/main/res/layout/empty.xml" value="0.5770833333333333" />
@@ -70,7 +71,7 @@
         <entry key="schedule/src/main/res/layout/files_list_fragment_layout.xml" value="0.4196400960286458" />
         <entry key="schedule/src/main/res/layout/files_menu_pop_layout.xml" value="0.5911458333333334" />
         <entry key="schedule/src/main/res/layout/files_preview_fragment_layout.xml" value="0.5911458333333334" />
-        <entry key="schedule/src/main/res/layout/files_uploading_fragment_layout.xml" value="0.5911458333333334" />
+        <entry key="schedule/src/main/res/layout/files_uploading_fragment_layout.xml" value="0.2855138142903646" />
         <entry key="swipe/src/main/res/layout/x_recycler_view_item.xml" value="0.34375" />
         <entry key="swipe/src/main/res/layout/x_recycler_view_load_more.xml" value="0.34375" />
       </map>

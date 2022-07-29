@@ -66,7 +66,7 @@ object FilesMenuPop {
 
         private fun deleteFile(info: ScheduleFileInfo, p: Int, onDelete: (Boolean, Boolean, Int, ScheduleFileInfo?) -> Unit) {
             onDelete(true, false, p, info)
-            ScheduleApi.deleteMeetingFile(info.meetingId, info.id).call { isSuccess, _, _, _ ->
+            ScheduleApi.deleteMeetingFile(Body.DeleteFiles(info.meetingId, info.id)).call { isSuccess, _, _, _ ->
                 if (isSuccess) {
                     info.url?.let { FileSPHelper.removeFileInfo(it) }
                 }

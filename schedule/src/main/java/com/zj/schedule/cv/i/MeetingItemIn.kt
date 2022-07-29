@@ -1,6 +1,7 @@
 package com.zj.schedule.cv.i
 
 import java.io.Serializable
+import java.util.*
 
 
 interface MeetingItemIn : Serializable {
@@ -19,4 +20,16 @@ interface MeetingItemIn : Serializable {
     fun getHostName(): String
     fun getMeetingOwnerId(): Long
     fun getHostId(): Long
+
+    fun getStartCalendar(): Calendar {
+        val startCalendar = Calendar.getInstance()
+        startCalendar.timeInMillis = getMeetingStartTime()
+        return startCalendar
+    }
+
+    fun getEndCalendar(): Calendar {
+        val endCalendar = Calendar.getInstance()
+        endCalendar.timeInMillis = getMeetingEndTime()
+        return endCalendar
+    }
 }

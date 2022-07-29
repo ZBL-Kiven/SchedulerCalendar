@@ -73,15 +73,15 @@ object DownloadManager {
             val url = info.url ?: ""
             val headers = Utl.config?.getHeader() ?: mutableMapOf()
             val fName = file.name
-            compo = ZApi.Downloader.with(url, file).header(headers).callId(url).start(object : DownloadListener {
+            compo = ZApi.Downloader.with(url, file).header(headers).observerOn(ZApi.MAIN).callId(url).start(object : DownloadListener {
                 override suspend fun onStart(callId: String) {
-                    val f = FileNetInfo(1, callId, file.path, url, FileState.Waiting.name)
+                    val f = FileNetInfo(1, fName, callId, file.path, url, FileState.Waiting.name)
                     FileSPHelper.putFileInfo(callId, f)
                     ls[callId]?.onStart(callId)
                 }
 
                 override suspend fun onCompleted(callId: String, absolutePath: String) {
-                    val f = FileNetInfo(1, callId, absolutePath, url, FileState.Success.name)
+                    val f = FileNetInfo(1, fName, callId, absolutePath, url, FileState.Success.name)
                     downloadingTasks.remove(url)
                     FileSPHelper.putFileInfo(callId, f)
                     Utl.toastFileStateForApp(R.string.Download, fName)
@@ -94,7 +94,7 @@ object DownloadManager {
                 }
 
                 override suspend fun onError(callId: String, e: Throwable?, isCanceled: Boolean) {
-                    val f = FileNetInfo(1, callId, file.path, url, FileState.Failed.name)
+                    val f = FileNetInfo(1, fName, callId, file.path, url, FileState.Failed.name)
                     downloadingTasks.remove(url)
                     FileSPHelper.putFileInfo(callId, f)
                     ls[callId]?.onError(callId, e, isCanceled)

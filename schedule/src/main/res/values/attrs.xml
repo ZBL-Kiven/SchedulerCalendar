@@ -2,6 +2,7 @@
 <resources>
 
     <item name="download_state_tag" type="id" />
+    <item name="upload_state_tag" type="id" />
 
     <declare-styleable name="CustomStatusBgView">
         <attr name="status" format="integer" />

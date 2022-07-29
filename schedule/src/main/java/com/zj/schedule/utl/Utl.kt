@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.graphics.drawable.DrawableCompat
+import com.zj.cf.fragments.BaseFragment
 import com.zj.cf.managers.ConstrainFragmentManager
 import com.zj.schedule.R
 import com.zj.schedule.files.FilePreviewFragment
@@ -32,7 +33,7 @@ internal object Utl {
 
     var app: Application? = null
 
-    lateinit var frgManager: ConstrainFragmentManager
+    var frgManager: ConstrainFragmentManager? = null
 
     fun setConfig(config: Config) {
         this.config = config
@@ -63,19 +64,22 @@ internal object Utl {
         return ext
     }
 
+    fun getCurTopFragment(): BaseFragment? {
+        return frgManager?.getTopOfStack()
+    }
+
     @Suppress("DEPRECATION")
     fun toastFileStateForApp(type: Int, fileName: String?) {
-        val frg = frgManager.getTopOfStack()
+        val frg = getCurTopFragment()
         if (type == R.string.Upload && frg is FileUploadingFragment) return
         if (type == R.string.Download && frg is FilePreviewFragment) return
         val context = frg?.context ?: app
         val toast = Toast(context)
         toast.setGravity(Gravity.CENTER, 0, 0)
-        val ctx = toast.view?.context
-        val v = View.inflate(ctx, R.layout.files_toast_hint, null)
+        val v = View.inflate(context, R.layout.files_toast_hint, null)
         v.findViewById<TextView>(R.id.files_toast_hint_tv)?.let {
-            val t = ctx?.getString(type)
-            it.text = ctx?.getString(R.string.Success_for_U_or_D, fileName, t)
+            val t = context?.getString(type)
+            it.text = context?.getString(R.string.Success_for_U_or_D, fileName, t)
         }
         toast.view = v
         toast.duration = Toast.LENGTH_SHORT
@@ -147,5 +151,27 @@ internal object Utl {
             fSize /= 1024f
             format(fSize) + "GB"
         }
+    }
+
+    fun getMonthString(month: Int?): String {
+        return when (month) {
+            0 -> "Jan"
+            1 -> "Feb"
+            2 -> "Mar"
+            3 -> "Apr"
+            4 -> "May"
+            5 -> "Jun"
+            6 -> "Jul"
+            7 -> "Aug"
+            8 -> "Sep"
+            9 -> "Oct"
+            10 -> "Nov"
+            11 -> "Dec"
+            else -> "NAN"
+        }
+    }
+
+    fun getDigitsDay(day: Int): String {
+        return if (day < 10) "0$day" else "$day"
     }
 }

@@ -22,6 +22,6 @@ internal interface ScheduleService {
     @GET("/app/scene-support/meeting/active-member")
     suspend fun getMeetingMembers(@Query("meetingId") meetingId: String): SuspendObservable<List<MeetingMemberInfo>?>
 
-    @DELETE("/app/scene-support/meeting/delete-meeting-file/{meetingId}/{fileId}")
-    fun deleteMeetingFile(@Path("meetingId") meetingId: Long, @Path("fileId") fileId: Long): Observable<Any>
+    @HTTP(method = "DELETE", path = "/app/scene-support/meeting/delete-meeting-file", hasBody = true)
+    fun deleteMeetingFile(@Body file: com.zj.schedule.data.api.Body.DeleteFiles): Observable<Any>
 }

@@ -84,6 +84,10 @@ internal object Preference {
         } else return null
     }
 
+    fun getAll(): MutableMap<String, *>? {
+        return sp?.all
+    }
+
     private fun isSupportedType(t: Any): Boolean {
         return when (t) {
             is String, is Int, is Long, is Float, is Boolean, is Set<*> -> true

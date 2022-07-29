@@ -4,7 +4,6 @@ package com.zj.schedule.files
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +50,6 @@ class FilePreviewFragment : ConstrainFragment(), DownloadListener {
 
     override fun onCreate() {
         super.onCreate()
-        if (data == null) finish()
         ivBack = find(R.id.files_preview_fragment_layout_iv_back)
         tvName = find(R.id.files_preview_fragment_layout_tv_name)
         ivIcon = find(R.id.files_preview_fragment_layout_iv_type)
@@ -93,7 +91,7 @@ class FilePreviewFragment : ConstrainFragment(), DownloadListener {
 
     private fun updateFileBtn() {
         val url = data?.url ?: return
-        val cached = FileSPHelper.getFileInfo(url)
+        val cached = FileSPHelper.findLocalFromUrl(url)
         if (cached != null) {
             when (cached.state) {
                 FileState.Failed.name -> {
@@ -179,8 +177,8 @@ class FilePreviewFragment : ConstrainFragment(), DownloadListener {
     }
 
     private fun openFile(url: String) {
-        val cached = FileSPHelper.getFileInfo(url)
-        if (cached == null || cached.translationPath.isEmpty()) return
-        FileOpenHelper.openFile(requireContext(), cached.translationPath)
+        val cached = FileSPHelper.findLocalFromUrl(url)
+        if (cached == null || cached.localPath.isEmpty()) return
+        FileOpenHelper.openFile(requireContext(), cached.localPath)
     }
 }

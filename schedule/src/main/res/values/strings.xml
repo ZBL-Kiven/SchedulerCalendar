@@ -21,6 +21,7 @@
     <string name="Upload">Upload</string>
     <string name="Download">Download</string>
     <string name="Files">Files</string>
+    <string name="UploadList">Upload List</string>
     <string name="CancelDownload">Cancel Download</string>
     <string name="OpenFile">Open File</string>
 
