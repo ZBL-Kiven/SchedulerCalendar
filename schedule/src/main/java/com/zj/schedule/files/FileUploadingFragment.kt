@@ -27,8 +27,10 @@ class FileUploadingFragment : ConstrainFragment() {
     private var uploaded: MutableList<FileNetInfo>? = null
     private var meetingId: Long? = null
     private var adapter = FileUploadingAdapter { m ->
-        FileSPHelper.removeFileInfo(m.originalPath)
-        removeAt(m)
+        if (m.state == FileState.Failed.name) {
+            FileSPHelper.removeFileInfo(m.originalPath)
+            removeAt(m)
+        }
     }
     private var vBack: View? = null
     private var rvContent: RecyclerView? = null
@@ -69,13 +71,15 @@ class FileUploadingFragment : ConstrainFragment() {
         super.onPostValue(bundle)
         val data = bundle?.getString("lst")
         meetingId = bundle?.getLong("meetingId")
-        uploaded = Gson().fromJson<MutableList<FileNetInfo>>(data, TypeToken.getArray(FileNetInfo::class.java).type)
+        uploaded = Gson().fromJson<Array<FileNetInfo>>(data, TypeToken.getArray(FileNetInfo::class.java).type).toMutableList()
     }
 
     override fun onCreate() {
         super.onCreate()
         UploadManager.clearAllDots()
-        val uploading = FileSPHelper.getAllFiles()
+        val uploading = FileSPHelper.getAllFiles {
+            it.state != FileState.Success.name && it.withId == "$meetingId"
+        }
         vBack = find(R.id.files_uploading_fragment_layout_iv_back)
         rvContent = find(R.id.files_uploading_fragment_layout_rv)
         vUpload = find(R.id.files_uploading_fragment_layout_upload)
@@ -87,7 +91,11 @@ class FileUploadingFragment : ConstrainFragment() {
         }
         val lst = mutableListOf<FileNetInfo>()
         lst.addAll(uploading)
-        uploaded?.let { lst.addAll(it) }
+        uploaded?.map {
+            it.progress = 100;it
+        }?.let {
+            lst.addAll(it)
+        }
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
 
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {

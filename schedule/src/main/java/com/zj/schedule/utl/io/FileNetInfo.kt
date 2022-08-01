@@ -9,5 +9,7 @@ internal data class FileNetInfo(val type: Int, var name: String, var originalPat
 
     var progress: Int = 0
 
+    var withId: String = ""
+
     var uploadId: String = UUID.randomUUID().toString()
 }

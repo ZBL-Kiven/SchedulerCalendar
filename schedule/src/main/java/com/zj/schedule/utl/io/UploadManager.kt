@@ -62,6 +62,7 @@ internal object UploadManager {
                 if (s?.path != null && !uri.isNullOrEmpty()) {
                     val f = File(s.path)
                     val spInfo = FileNetInfo(0, f.name, uri, s.path, null)
+                    spInfo.withId = meetingId
                     notifyToListeners(spInfo.uploadId) { onStart(spInfo.uploadId, spInfo) }
                     FileSPHelper.putFileInfo(uri, spInfo)
                     if (!f.exists()) {

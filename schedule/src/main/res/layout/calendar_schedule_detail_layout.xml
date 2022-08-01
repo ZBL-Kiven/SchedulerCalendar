@@ -11,6 +11,7 @@
         android:id="@+id/calendar_schedule_detail_iv_back"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginTop="24dp"
         android:src="@mipmap/calendar_icon_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

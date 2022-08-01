@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), MeetingFuncIn {
     }
 
     fun startCalendarFrg(view: View) {
-        val scheduleInfo = InitScheduleInfo(System.currentTimeMillis(), "1012")
+        val scheduleInfo = InitScheduleInfo(System.currentTimeMillis(), "1041")
         val b = bundleOf(Pair(SCHEDULE_ID, scheduleInfo))
         c.start(this, findViewById(android.R.id.content), CalendarFragment::class.java, b) {
             true
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), MeetingFuncIn {
     }
 
     fun startFileListFrg(view: View) {
-        val b = bundleOf(Pair("meetingId", 1012L))
+        val b = bundleOf(Pair("meetingId", 1041L))
         c.start(this, findViewById(android.R.id.content), FileListFragment::class.java, b) {
             true
         }

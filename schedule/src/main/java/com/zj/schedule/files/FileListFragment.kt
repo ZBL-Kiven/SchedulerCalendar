@@ -161,7 +161,7 @@ class FileListFragment : ConstrainFragment() {
         val b = Bundle()
         b.putString("lst", Gson().toJson(data))
         b.putLong("meetingId", meetingId)
-        startFragment(FileUploadingFragment::class.java)
+        startFragment(FileUploadingFragment::class.java, b)
     }
 
     override fun onFragmentResult(bundle: Bundle?) {

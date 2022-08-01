@@ -64,13 +64,14 @@ internal object FileSPHelper {
         }
     }
 
-    fun getAllFiles(): MutableList<FileNetInfo> {
+    fun getAllFiles(predicate: ((FileNetInfo) -> Boolean)? = null): MutableList<FileNetInfo> {
         val s = Preference.getAll()
         if (s.isNullOrEmpty()) return mutableListOf()
         val gson = Gson()
         return s.mapNotNullTo(mutableListOf()) {
             kotlin.runCatching {
-                gson.fromJson(it.value.toString(), FileNetInfo::class.java)
+                val fn = gson.fromJson(it.value.toString(), FileNetInfo::class.java)
+                if (predicate == null) fn else if (predicate(fn)) fn else null
             }.getOrNull()
         }
     }
