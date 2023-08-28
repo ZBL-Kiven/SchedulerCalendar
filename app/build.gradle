@@ -37,5 +37,5 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation project(":schedule")
-    implementation 'com.cc.android:conf:2.2.1'
+    implementation 'com.zj.repo:conf:2.2.1'
 }

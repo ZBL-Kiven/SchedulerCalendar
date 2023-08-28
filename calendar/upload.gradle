@@ -3,7 +3,7 @@ apply plugin: 'maven-publish'
 afterEvaluate {
     publishing {
         Properties properties = new Properties()
-        String path = getProjectDir().path + '/cc-upload.properties'
+        String path = getProjectDir().path + '/upload.properties'
         File file = new File(path)
         if (file.exists()) {
             InputStream inputStream = file.newDataInputStream()
